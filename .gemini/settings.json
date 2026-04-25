@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "proxima": {
+      "command": "node",
+      "args": [
+        "/Users/nathangorey/proxima/src/mcp-server-v3.js"
+      ]
+    }
+  }
+}

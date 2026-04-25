@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Too Deep — Jeff Sorkowitz</title>
+  <meta name="description"
+    content="Too Deep by Jeff Sorkowitz — Interactive artwork for the new release on Short Circuit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: 'Aspekta-450';
+      src: url('https://assets.unicorn.studio/fonts/custom/2XkgAIoiFOemW74z0NEtIhY9Jtl2/Aspekta-450/Aspekta-450.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+
+  <!-- Release info — floating, top center -->
+  <div id="release-info">
+    <div class="release-available">Available</div>
+    <div class="release-date">MAY 1, 2026</div>
+    <div class="countdown-badge">
+      <span class="countdown" id="countdown"></span>
+    </div>
+  </div>
+
+  <!-- Share toast -->
+  <div id="share-toast" class="hidden">Copied</div>
+
+  <!-- Dim + blur backdrop -->
+  <div id="panel-backdrop"></div>
+
+  <!-- Bottom assembly — controls + presave + links panel -->
+  <div id="bottom-assembly">
+    <!-- Controls group — play, sub, presave stacked -->
+    <div class="controls-group">
+      <div class="controls-row">
+        <div class="play-wrap">
+          <button id="play-btn" aria-label="Play audio">
+            <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="8,4 20,12 8,20" />
+            </svg>
+          </button>
+          <span class="play-label">PLAY</span>
+        </div>
+
+        <div class="sub-knob-wrap">
+          <div class="sub-knob" id="sub-knob" role="slider" aria-label="Sub" aria-valuemin="0" aria-valuemax="2"
+            aria-valuenow="1" tabindex="0" style="--val: 1">
+            <div class="knob-pointer"></div>
+            <div class="knob-tick knob-tick-min"></div>
+            <div class="knob-tick knob-tick-max"></div>
+          </div>
+          <span class="sub-knob-label">SUB</span>
+        </div>
+      </div>
+
+      <!-- PRE-SAVE toggle — same width as controls-row -->
+      <button class="presave-toggle" aria-expanded="false" aria-controls="panel-tier-2">
+        <span>PRE-SAVE</span>
+        <svg class="arrow-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <polyline points="19 12 12 19 5 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Links panel -->
+    <div id="bottom-panel">
+      <button id="share-btn" aria-label="Share this page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
+          <polyline points="16 6 12 2 8 6" />
+          <line x1="12" y1="2" x2="12" y2="15" />
+        </svg>
+      </button>
+
+      <div class="panel-tier2" id="panel-tier-2">
+        <div class="tier2-inner">
+          <div class="platform-buttons" id="platform-buttons"></div>
+          <a href="https://smallworld.media" target="_blank" rel="noopener noreferrer" class="swm-credit">site by small
+            world media</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

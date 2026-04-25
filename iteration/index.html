@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeuomorphic UI Iterations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="iteration-container">
+        <h1>Skeuomorphic UI Iterations</h1>
+
+        <section class="ui-section">
+            <h2>Knobs</h2>
+            <div class="variations" id="knobs-container">
+                <!-- V1: Metal -->
+                <div class="element-card">
+                    <h3>V1: Brushed Metal</h3>
+                    <div class="ui-element knob-element metal-knob" data-rotation="-135">
+                        <div class="knob-pivot">
+                            <div class="knob-tick"></div>
+                        </div>
+                        <div class="knob-base"></div>
+                    </div>
+                </div>
+
+                <!-- V2: Dark Matte -->
+                <div class="element-card">
+                    <h3>V2: Dark Matte</h3>
+                    <div class="ui-element knob-element matte-knob" data-rotation="-135">
+                        <div class="knob-pivot">
+                            <div class="knob-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ui-section">
+            <h2>Sliders</h2>
+            <div class="variations" id="sliders-container">
+                <!-- V1: Recessed Fader -->
+                <div class="element-card">
+                    <h3>V1: Console Fader</h3>
+                    <div class="ui-element fader-element console-fader">
+                        <div class="fader-track">
+                            <div class="fader-handle" style="top: 50%;">
+                                <div class="handle-ridge"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- V2: LED Fader -->
+                <div class="element-card">
+                    <h3>V2: LED Backlit</h3>
+                    <div class="ui-element fader-element led-fader">
+                        <div class="fader-track">
+                            <div class="led-fill" style="height: 40%;"></div>
+                            <div class="fader-handle" style="top: 60%;">
+                                <div class="handle-ridge"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ui-section">
+            <h2>Play Buttons</h2>
+            <div class="variations" id="play-buttons-container">
+                <!-- V1: Mechanical Toggle -->
+                <div class="element-card">
+                    <h3>V1: Mechanical Tactile</h3>
+                    <div class="ui-element button-element mechanical-button">
+                        <div class="btn-face">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- V2: Backlit Silicon -->
+                <div class="element-card">
+                    <h3>V2: Backlit Silicon</h3>
+                    <div class="ui-element button-element silicon-button glow-off">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ui-section">
+            <h2>Tape Deck Buttons</h2>
+            <div class="variations" id="tape-deck-container">
+                <div class="element-card">
+                    <h3>V1: Matte Plastic</h3>
+                    <div class="tape-deck-panel plastic">
+                        <button class="tape-btn play" id="tape-play-1">
+                            <div class="tape-led"></div>
+                            <span class="icon">▶</span>
+                        </button>
+                        <button class="tape-btn pause pressed" id="tape-pause-1">
+                            <span class="icon">⏸</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <h3>V2: Brushed Metal with BASS Sub Control</h3>
+                    <div style="display: flex; gap: 3rem; align-items: flex-end;">
+                        <!-- Tape Deck -->
+                        <div class="tape-deck-panel metal">
+                            <button class="tape-btn play" id="tape-play-2">
+                                <div class="tape-led"></div>
+                                <span class="icon">▶</span>
+                            </button>
+                            <button class="tape-btn pause pressed" id="tape-pause-2">
+                                <span class="icon">⏸</span>
+                            </button>
+                        </div>
+
+                        <!-- BASS Sub Knob -->
+                        <div class="sub-control-wrapper metal">
+                            <div class="sub-knob" id="bass-knob" data-rotation="180">
+                                <div class="sub-knob-pivot" style="transform: rotate(180deg);">
+                                    <div class="knob-led-dot glow-off"></div>
+                                </div>
+                            </div>
+                            <div class="sub-label glow-off" id="bass-label">BASS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="element-card">
+                    <h3>V3: Tape Deck & Ring LED BASS</h3>
+                    <div style="display: flex; gap: 3rem; align-items: flex-end;">
+                        <!-- Tape Deck -->
+                        <div class="tape-deck-panel metal">
+                            <button class="tape-btn play" id="tape-play-3">
+                                <div class="tape-led"></div>
+                                <span class="icon">▶</span>
+                            </button>
+                            <button class="tape-btn pause pressed" id="tape-pause-3">
+                                <span class="icon">⏸</span>
+                            </button>
+                        </div>
+
+                        <!-- BASS Sub Knob V3 -->
+                        <div class="sub-control-wrapper metal v3-wrapper">
+                            <div class="knob-cluster" style="position: relative; width: 94px; height: 94px;">
+                                <div class="knob-led-ring-outer" style="position: absolute; inset: 0;">
+                                    <div class="ring-unlit"></div>
+                                    <div class="ring-lit glow-off"></div>
+                                </div>
+                                <div class="sub-knob" id="bass-knob-3" data-rotation="210"
+                                    style="position: absolute; top: 12px; left: 12px; margin: 0; z-index: 2;">
+                                    <div class="sub-knob-pivot pivot-3">
+                                        <div class="pivot-3-cap">
+                                            <div class="knob-embossed-notch"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sub-label glow-off" id="bass-label-3">BASS</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

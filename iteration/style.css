@@ -1,0 +1,755 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #f0f0f0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.iteration-container {
+    max-width: 1200px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ui-section {
+    margin-bottom: 4rem;
+    background: #2a2a2a;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 10px 20px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: #ccc;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.variations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+}
+
+/* Base styles for UI variations will be added below */
+
+.element-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.element-card h3 {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+    font-weight: 500;
+}
+
+.ui-element {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =========================================================================
+   1. KNOBS
+   ========================================================================= */
+
+/* V1: Brushed Metal Knob */
+.metal-knob {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    /* Outer casing drop shadow + light spill */
+    box-shadow:
+        0 10px 15px rgba(0, 0, 0, 0.6),
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        inset 0 2px 3px rgba(255, 255, 255, 0.4),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #e6e6e6 0%, #b8b8b8 40%, #a0a0a0 60%, #858585 100%);
+    position: relative;
+    cursor: pointer;
+}
+
+/* Simulate the grooved texture on the sides */
+.metal-knob::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(#555 0deg, #999 1deg, #555 2deg, #bbb 3deg, #555 4deg);
+    opacity: 0.15;
+    mix-blend-mode: multiply;
+}
+
+.metal-knob .knob-pivot {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+    background: radial-gradient(circle at 30% 30%, #f0f0f0, #c0c0c0);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.5),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    transition: transform 0.1s;
+}
+
+.metal-knob .knob-tick {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 18px;
+    background: #222;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* V2: Dark Matte Knob */
+.matte-knob {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #282828;
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.7),
+        inset 0 2px 2px rgba(255, 255, 255, 0.05),
+        inset 0 -2px 2px rgba(0, 0, 0, 0.8);
+    position: relative;
+    cursor: pointer;
+    border: 1px solid #1a1a1a;
+}
+
+.matte-knob .knob-pivot {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    /* Soft top highlight */
+    background: linear-gradient(180deg, #353535 0%, #202020 100%);
+}
+
+.matte-knob .knob-indicator {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ffcc;
+    /* Active glow color */
+    box-shadow: 0 0 8px #00ffcc, inset 0 2px 2px rgba(255, 255, 255, 0.8);
+}
+
+
+/* =========================================================================
+   2. SLIDERS
+   ========================================================================= */
+.console-fader {
+    height: 200px;
+    width: 60px;
+}
+
+.fader-track {
+    width: 12px;
+    height: 100%;
+    background: #111;
+    border-radius: 6px;
+    box-shadow:
+        inset 0 2px 5px rgba(0, 0, 0, 0.8),
+        inset 0 4px 10px rgba(0, 0, 0, 0.5),
+        0 1px 1px rgba(255, 255, 255, 0.1);
+    /* bottom reflected light */
+    position: relative;
+    /* tick marks pseudo element */
+}
+
+/* Fader scale ticks */
+.fader-track::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    left: -20px;
+    width: 6px;
+    background: repeating-linear-gradient(to bottom, #555 0, #555 2px, transparent 2px, transparent 10%);
+    opacity: 0.5;
+}
+
+.fader-handle {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 24px;
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+    border-radius: 4px;
+    box-shadow:
+        0 5px 8px rgba(0, 0, 0, 0.6),
+        0 10px 20px rgba(0, 0, 0, 0.4),
+        inset 0 2px 2px rgba(255, 255, 255, 0.3),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.8);
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fader-handle:active {
+    cursor: grabbing;
+}
+
+.fader-handle .handle-ridge {
+    width: 30px;
+    height: 4px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* V2: LED Fader */
+.led-fader {
+    height: 200px;
+    width: 60px;
+}
+
+.led-fader .fader-track {
+    background: #0a0a0a;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.led-fader .led-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, #00ffcc, #0066ff);
+    opacity: 0.8;
+    box-shadow: 0 0 10px #00ffcc, 0 0 20px #0066ff;
+    border-radius: 0 0 6px 6px;
+    /* Simulate segmented LEDs */
+    mask-image: repeating-linear-gradient(to top, black 0, black 3px, transparent 3px, transparent 4px);
+    -webkit-mask-image: repeating-linear-gradient(to top, black 0, black 3px, transparent 3px, transparent 4px);
+}
+
+.led-fader .fader-handle {
+    background: linear-gradient(180deg, #222 0%, #111 100%);
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.8),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================================================
+   3. BUTTONS
+   ========================================================================= */
+
+/* V1: Mechanical */
+.mechanical-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    background: #2a2a2a;
+    box-shadow:
+        0 8px 12px rgba(0, 0, 0, 0.5),
+        0 1px 0 #111,
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.1s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.mechanical-button .btn-face {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #444 0%, #2a2a2a 100%);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.15), inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aaa;
+    border: 1px solid #111;
+}
+
+/* =========================================
+   TAPE DECK MECHANISM (EXTRUDED CSS)
+========================================= */
+
+.tape-deck-panel {
+    display: inline-flex;
+    gap: 4px;
+    /* Tiny hairline gap between buttons */
+    padding: 12px 6px 2px 6px;
+    /* Removed bottom padding so buttons flush against the bottom edge */
+    border-radius: 8px;
+    /* Slightly rounded socket */
+    border: 1px solid #111;
+    margin-top: 15px;
+    /* Give room above for the overlapping button */
+}
+
+/* Variation 1: Matte Plastic */
+.tape-deck-panel.plastic {
+    background: #080808;
+    box-shadow: inset 0 8px 15px rgba(0, 0, 0, 1);
+}
+
+/* Variation 2: Brushed Metal Case */
+.tape-deck-panel.metal {
+    background: #050505;
+    box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.tape-btn {
+    position: relative;
+    width: 66px;
+    height: 70px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Intentional, physical snap */
+
+    /* Uppermost mechanical position - breaking over the 12px top padding by 4px */
+    transform: translateY(-16px);
+}
+
+/* PRESSED STATE (Sinking exactly to the floor of the 16px extrusion) */
+.tape-btn.pressed {
+    transform: translateY(0);
+}
+
+/* ---------------------------------
+   Material Styles: Plastic
+--------------------------------- */
+.plastic .tape-btn {
+    background: linear-gradient(to bottom, #383838 0%, #252525 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 2px rgba(0, 0, 0, 0.5),
+
+        /* Crisp dark edge */
+        0 1px 0 rgba(0, 0, 0, 0.8),
+        /* Extrusion Wall (16px) - Darkened */
+        0 2px 0 #1c1c1c, 0 3px 0 #1a1a1a, 0 4px 0 #181818,
+        0 5px 0 #161616, 0 6px 0 #151515, 0 7px 0 #141414, 0 8px 0 #131313,
+        0 9px 0 #121212, 0 10px 0 #111111, 0 11px 0 #101010, 0 12px 0 #0d0d0d,
+        0 13px 0 #0a0a0a, 0 14px 0 #080808, 0 15px 0 #060606, 0 16px 0 #040404,
+
+        /* Soft Drop Shadow connecting to the floor */
+        0 20px 10px rgba(0, 0, 0, 0.8);
+}
+
+.plastic .tape-btn.pressed {
+    background: linear-gradient(to bottom, #2a2a2a 0%, #151515 100%);
+    /* Shadow from socket lip casting inward, no extrusion */
+    box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* ---------------------------------
+   Material Styles: Metal (Refined)
+--------------------------------- */
+.metal .tape-btn {
+    /* Subtle uniform metallic gradient */
+    background: linear-gradient(to bottom, #8a8a8a 0%, #767676 100%);
+    box-shadow:
+        /* Bevels for the top face - sharper top and bottom contrast */
+        inset 0 1px 1px rgba(255, 255, 255, 0.7),
+        inset 1px 0 2px rgba(255, 255, 255, 0.2),
+        inset -1px 0 2px rgba(0, 0, 0, 0.2),
+        inset 0 -2px 2px rgba(0, 0, 0, 0.6),
+
+        /* Sharp crisp edge separating top face from the extrusion wall */
+        0 1px 0 rgba(0, 0, 0, 0.5),
+
+        /* The Extrusion Wall: Darkened 16px block of descending dark grays */
+        0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050,
+        0 5px 0 #4c4c4c, 0 6px 0 #484848, 0 7px 0 #444444, 0 8px 0 #404040,
+        0 9px 0 #3c3c3c, 0 10px 0 #383838, 0 11px 0 #343434, 0 12px 0 #303030,
+        0 13px 0 #2c2c2c, 0 14px 0 #282828, 0 15px 0 #242424, 0 16px 0 #202020,
+
+        /* Shadow onto the floor */
+        0 20px 10px rgba(0, 0, 0, 0.8);
+}
+
+.metal .tape-btn.pressed {
+    /* Same central gray material, just lit much darker via socket overhead */
+    background: linear-gradient(to bottom, #767676 0%, #606060 100%);
+    box-shadow:
+        /* socket overhead casting an inward shadow */
+        inset 0 12px 10px rgba(0, 0, 0, 0.7),
+        /* tiny rim lighting around the edge */
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------------------------------
+   LED Logic
+--------------------------------- */
+.tape-led {
+    position: absolute;
+    top: 10px;
+    width: 28px;
+    height: 4px;
+    border-radius: 2px;
+    background: #661111;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+    transition: all 0.2s;
+}
+
+/* UP State: Blinking Red */
+.tape-btn.play:not(.pressed) .tape-led {
+    animation: ledPulseRed 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes ledPulseRed {
+    0% {
+        background: #661111;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+    }
+
+    100% {
+        background: #ff4444;
+        box-shadow: 0 0 6px #ff4444, inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* PRESSED State: Solid Green */
+.tape-btn.play.pressed .tape-led {
+    animation: none;
+    background: #22ff55;
+    box-shadow: 0 0 8px #22ff55, inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* ---------------------------------
+   Icon Logic
+--------------------------------- */
+.tape-btn .icon {
+    margin-top: 10px;
+    /* Below LED */
+    font-size: 24px;
+    color: #4a4a4a;
+    /* Grayed out when inactive/UP */
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+
+/* PRESSED: Active Backlight Glow */
+.tape-btn.pressed .icon {
+    color: #e0e0e0;
+    /* Bright white/gray */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.mechanical-button:active {
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 0 #111,
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.mechanical-button:active .btn-face {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    background: linear-gradient(180deg, #333 0%, #222 100%);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* V2: Backlit Silicon */
+.silicon-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    background: #333;
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #444;
+    /* dark icon initially */
+    transition: all 0.2s;
+    border: 1px solid #222;
+}
+
+.silicon-button:active,
+.silicon-button.glow-on {
+    background: #383838;
+    color: #00e5ff;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.5),
+        inset 0 2px 8px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(0, 229, 255, 0.2);
+    transform: translateY(2px);
+}
+
+.silicon-button:active svg,
+.silicon-button.glow-on svg {
+    filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.8));
+}
+
+/* =========================================
+   SUB CONTROL KNOB (BASS)
+========================================= */
+.sub-control-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.sub-knob {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    background: linear-gradient(135deg, #a0a0a0 0%, #767676 40%, #606060 100%);
+    box-shadow:
+        /* Bevel top edge */
+        inset 0 1px 2px rgba(255, 255, 255, 0.7),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+        /* Sharp rim separator */
+        0 1px 0 rgba(0, 0, 0, 0.5),
+        /* Vertical metallic extrusion - sits higher than buttons */
+        0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050, 0 5px 0 #4c4c4c,
+        0 6px 0 #464646, 0 7px 0 #404040, 0 8px 0 #3a3a3a, 0 9px 0 #323232,
+        0 10px 0 #2a2a2a, 0 11px 0 #222222, 0 12px 0 #1a1a1a,
+        /* Drop shadow resting on standard console top */
+        0 18px 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Texture via repeating radial gradient to mimic machine ridges */
+.sub-knob::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(#555 0deg, #999 1deg, #555 2deg, #bbb 3deg, #555 4deg);
+    opacity: 0.15;
+    mix-blend-mode: multiply;
+}
+
+.sub-knob-pivot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+/* The LED embedded on the top face tracking circumference */
+.sub-knob-pivot .knob-led-dot {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #444;
+    /* Dark unlit */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.1s;
+}
+
+/* Active Glow (Silver-White like the Tape Icons) */
+.sub-knob-pivot .knob-led-dot.glow-on {
+    background: #e0e0e0;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+/* Hardware Label beneath the knob */
+.sub-label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #4a4a4a;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+
+.sub-label.glow-on {
+    color: #e0e0e0;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   V3: SEGMENTED LED RING & REFINEMENTS
+========================================= */
+:root {
+    --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.v3-wrapper {
+    position: relative;
+    width: 94px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.v3-wrapper .sub-label {
+    margin-top: 24px;
+}
+
+.tape-deck-panel .tape-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: var(--noise-texture);
+    mix-blend-mode: overlay;
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.tape-btn .icon,
+.tape-btn .tape-led {
+    position: relative;
+    z-index: 2;
+}
+
+#bass-knob-3 {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.pivot-3 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    background: repeating-conic-gradient(from 0deg,
+            #333 0deg, #666 1deg, #888 2deg, #333 3deg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.pivot-3-cap {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8a8a8a 0%, #606060 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.4),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+}
+
+.pivot-3-cap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-image: var(--noise-texture);
+    mix-blend-mode: overlay;
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+.knob-embossed-notch {
+    position: absolute;
+    top: 4px;
+    width: 4px;
+    height: 12px;
+    background: #555555;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 1),
+        0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 3;
+}
+
+.ring-unlit,
+.ring-lit {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    --start-angle: 210deg;
+}
+
+.ring-unlit {
+    background: conic-gradient(from var(--start-angle),
+            rgba(0, 85, 255, 0.15) 0deg,
+            rgba(0, 255, 213, 0.15) 300deg,
+            transparent 300deg);
+
+    mask-image:
+        repeating-conic-gradient(from var(--start-angle), black 0deg, black 10deg, transparent 10deg, transparent 12deg),
+        radial-gradient(circle closest-side, transparent 76%, black 78%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+        repeating-conic-gradient(from var(--start-angle), black 0deg, black 10deg, transparent 10deg, transparent 12deg),
+        radial-gradient(circle closest-side, transparent 76%, black 78%);
+    -webkit-mask-composite: source-in;
+}
+
+.ring-lit {
+    background: conic-gradient(from var(--start-angle),
+            #0055ff 0deg,
+            #00ffd5 300deg,
+            transparent 300deg);
+
+    --fill-angle: 0deg;
+
+    mask-image:
+        conic-gradient(from var(--start-angle), black 0deg, black var(--fill-angle), transparent var(--fill-angle)),
+        repeating-conic-gradient(from var(--start-angle), black 0deg, black 10deg, transparent 10deg, transparent 12deg),
+        radial-gradient(circle closest-side, transparent 76%, black 78%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+        conic-gradient(from var(--start-angle), black 0deg, black var(--fill-angle), transparent var(--fill-angle)),
+        repeating-conic-gradient(from var(--start-angle), black 0deg, black 10deg, transparent 10deg, transparent 12deg),
+        radial-gradient(circle closest-side, transparent 76%, black 78%);
+    -webkit-mask-composite: source-in;
+
+    opacity: 0.1;
+    transition: filter 0.2s, opacity 0.2s;
+}
+
+.ring-lit.glow-on {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.7));
+}
