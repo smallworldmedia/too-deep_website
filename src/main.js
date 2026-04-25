@@ -291,11 +291,13 @@ function initPanel() {
 
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
+        if (window.innerWidth <= 768) return; // Disable swipe on mobile
         if (e.target.closest('.sub-knob')) return;
         touchStartY = e.touches[0].clientY;
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
+        if (window.innerWidth <= 768) return; // Disable swipe on mobile
         if (e.target.closest('.sub-knob')) return;
         const touchY = e.touches[0].clientY;
         const deltaY = touchStartY - touchY;
@@ -376,9 +378,8 @@ function onPointerMove(e) {
     mousePos.set(x, y);
 }
 
-window.addEventListener('mousemove', onPointerMove);
-window.addEventListener('touchmove', onPointerMove, { passive: true });
-window.addEventListener('touchstart', onPointerMove, { passive: true });
+window.addEventListener('pointermove', onPointerMove);
+window.addEventListener('pointerdown', onPointerMove);
 
 // ================================================================
 // RESIZE
