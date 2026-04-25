@@ -322,14 +322,21 @@ const CausticsShader = {
 
       vec4 causticNoise = getNoise(p) * causticIntensity;
 
-      // Double refraction for complexity
-      float refraction = mix(0.25, 1.3, 1.0);
-      vec4 balanceNoise = getNoise(p - vec3(causticNoise.xyz / 32.0) * refraction);
-      vec4 noise2 = getNoise(p - vec3(balanceNoise.xyz / 16.0) * refraction);
-      float balancer = 0.5 + 0.5 * balanceNoise.w;
-      float normalized = pow(0.5 + 0.5 * noise2.w, 2.0);
-      vec3 causticColor = vec3(0.792, 0.914, 0.933) * mix(0.0, normalized + 0.2 * (1.0 - normalized), balancer);
-      causticColor *= causticIntensity;
+      #ifdef MOBILE
+        // Single-pass caustics — skip double refraction to save GPU
+        float normalized = pow(0.5 + 0.5 * causticNoise.w, 2.0);
+        vec3 causticColor = vec3(0.792, 0.914, 0.933) * (normalized + 0.2 * (1.0 - normalized));
+        causticColor *= causticIntensity;
+      #else
+        // Double refraction for complexity
+        float refraction = mix(0.25, 1.3, 1.0);
+        vec4 balanceNoise = getNoise(p - vec3(causticNoise.xyz / 32.0) * refraction);
+        vec4 noise2 = getNoise(p - vec3(balanceNoise.xyz / 16.0) * refraction);
+        float balancer = 0.5 + 0.5 * balanceNoise.w;
+        float normalized = pow(0.5 + 0.5 * noise2.w, 2.0);
+        vec3 causticColor = vec3(0.792, 0.914, 0.933) * mix(0.0, normalized + 0.2 * (1.0 - normalized), balancer);
+        causticColor *= causticIntensity;
+      #endif
 
       vec4 color = texture2D(tDiffuse, uv + causticNoise.xy * 0.01 * 0.21);
       vec3 blended = colorBurn(color.rgb, causticColor);
@@ -483,7 +490,7 @@ const CymaticsSimShader = {
       // 3 spawn points — shared coupling points for both layers
       float epoch = floor(uTime * 0.22);
 
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < CYMATICS_SPAWNS; i++) {
         vec2 spawnPos = hash2(epoch * 3.0 + float(i));
         spawnPos = spawnPos * 0.6 + 0.2;
 
@@ -787,7 +794,11 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
   composer.addPass(bloomPass);
 
   // 4. Caustics pass
-  const causticsPass = new ShaderPass(CausticsShader);
+  const causticsPass = new ShaderPass({
+    uniforms: CausticsShader.uniforms,
+    vertexShader: CausticsShader.vertexShader,
+    fragmentShader: (isMobile ? '#define MOBILE\n' : '') + CausticsShader.fragmentShader,
+  });
   causticsPass.uniforms.uResolution.value.set(w, h);
   composer.addPass(causticsPass);
 
@@ -814,7 +825,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
       uResolution: { value: new THREE.Vector2(w, h) },
     },
     vertexShader: CymaticsSimShader.vertexShader,
-    fragmentShader: `#define SIM_SIZE ${simSize}\n` + CymaticsSimShader.fragmentShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n#define CYMATICS_SPAWNS ${isMobile ? 2 : 3}\n` + CymaticsSimShader.fragmentShader,
   });
 
   const cymaticsQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), cymaticsSimMaterial);

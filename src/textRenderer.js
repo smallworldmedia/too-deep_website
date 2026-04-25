@@ -23,10 +23,12 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.clearRect(0, 0, viewportWidth, viewportHeight);
 
     // On mobile portrait, scale by width so text fills the viewport
+    // Use a minimum floor so text is never tiny on narrow screens
     // On desktop/landscape, use min to prevent overflow
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const scale = IS_MOBILE_PORTRAIT ? widthScale * 1.15 : Math.min(widthScale, heightScale);
+    const MIN_MOBILE_SCALE = 0.42;
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
 
     // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
@@ -72,7 +74,8 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
 
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const scale = IS_MOBILE_PORTRAIT ? widthScale * 1.15 : Math.min(widthScale, heightScale);
+    const MIN_MOBILE_SCALE = 0.42;
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
     const fontSize = Math.round(100 * scale);
     const letterSpacing = 2 * scale;
 

@@ -13,157 +13,8 @@
         <h1>Skeuomorphic UI Iterations</h1>
 
         <section class="ui-section">
-            <h2>Knobs</h2>
-            <div class="variations" id="knobs-container">
-                <!-- V1: Metal -->
-                <div class="element-card">
-                    <h3>V1: Brushed Metal</h3>
-                    <div class="ui-element knob-element metal-knob" data-rotation="-135">
-                        <div class="knob-pivot">
-                            <div class="knob-tick"></div>
-                        </div>
-                        <div class="knob-base"></div>
-                    </div>
-                </div>
-
-                <!-- V2: Dark Matte -->
-                <div class="element-card">
-                    <h3>V2: Dark Matte</h3>
-                    <div class="ui-element knob-element matte-knob" data-rotation="-135">
-                        <div class="knob-pivot">
-                            <div class="knob-indicator"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="ui-section">
-            <h2>Sliders</h2>
-            <div class="variations" id="sliders-container">
-                <!-- V1: Recessed Fader -->
-                <div class="element-card">
-                    <h3>V1: Console Fader</h3>
-                    <div class="ui-element fader-element console-fader">
-                        <div class="fader-track">
-                            <div class="fader-handle" style="top: 50%;">
-                                <div class="handle-ridge"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- V2: LED Fader -->
-                <div class="element-card">
-                    <h3>V2: LED Backlit</h3>
-                    <div class="ui-element fader-element led-fader">
-                        <div class="fader-track">
-                            <div class="led-fill" style="height: 40%;"></div>
-                            <div class="fader-handle" style="top: 60%;">
-                                <div class="handle-ridge"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- V3: Segmented LED Fader (Mobile BASS) -->
-                <div class="element-card">
-                    <h3>V3: Segmented LED Mobile BASS</h3>
-                    <div class="mobile-fader-wrapper metal"
-                        style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
-                        <div style="display: flex; gap: 12px; height: 180px; position: relative;">
-                            <div class="fader-led-container" id="fader-leds-3"
-                                style="position: relative; width: 12px; height: 100%;"></div>
-                            <div class="fader-track-container" id="fader-track-3"
-                                style="position: relative; width: 42px; height: 100%;">
-                                <!-- Recessed track slit -->
-                                <div class="fader-slit"
-                                    style="position: absolute; top: 12px; bottom: 12px; left: 50%; width: 10px; margin-left: -5px; background: #080808; border-radius: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);">
-                                </div>
-                                <!-- Thumb -->
-                                <div class="metal-fader" id="fader-handle-3"
-                                    style="position: absolute; top: 156px; left: 0; width: 100%; height: 24px; cursor: ns-resize;">
-                                    <div class="fader-embossed-notch glow-off"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="sub-label glow-off" id="fader-label-3"
-                            style="text-align: center; margin-top: 15px;">BASS</div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <section class="ui-section">
-            <h2>Play Buttons</h2>
-            <div class="variations" id="play-buttons-container">
-                <!-- V1: Mechanical Toggle -->
-                <div class="element-card">
-                    <h3>V1: Mechanical Tactile</h3>
-                    <div class="ui-element button-element mechanical-button">
-                        <div class="btn-face">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- V2: Backlit Silicon -->
-                <div class="element-card">
-                    <h3>V2: Backlit Silicon</h3>
-                    <div class="ui-element button-element silicon-button glow-off">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="ui-section">
-            <h2>Tape Deck Buttons</h2>
+            <h2>Control Panel</h2>
             <div class="variations" id="tape-deck-container">
-                <div class="element-card">
-                    <h3>V1: Matte Plastic</h3>
-                    <div class="tape-deck-panel plastic">
-                        <button class="tape-btn play" id="tape-play-1">
-                            <div class="tape-led"></div>
-                            <span class="icon">▶</span>
-                        </button>
-                        <button class="tape-btn pause pressed" id="tape-pause-1">
-                            <span class="icon">⏸</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="element-card">
-                    <h3>V2: Brushed Metal with BASS Sub Control</h3>
-                    <div style="display: flex; gap: 3rem; align-items: flex-end;">
-                        <!-- Tape Deck -->
-                        <div class="tape-deck-panel metal">
-                            <button class="tape-btn play" id="tape-play-2">
-                                <div class="tape-led"></div>
-                                <span class="icon">▶</span>
-                            </button>
-                            <button class="tape-btn pause pressed" id="tape-pause-2">
-                                <span class="icon">⏸</span>
-                            </button>
-                        </div>
-
-                        <!-- BASS Sub Knob -->
-                        <div class="sub-control-wrapper metal">
-                            <div class="sub-knob" id="bass-knob" data-rotation="180">
-                                <div class="sub-knob-pivot" style="transform: rotate(180deg);">
-                                    <div class="knob-led-dot glow-off"></div>
-                                </div>
-                            </div>
-                            <div class="sub-label glow-off" id="bass-label">BASS</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="element-card">
                     <h3>V3: Tape Deck & Ring LED BASS</h3>
                     <div style="display: flex; gap: 3rem; align-items: flex-end;">
@@ -211,7 +62,36 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
+        <section class="ui-section">
+            <h2>Mobile BASS Fader</h2>
+            <div class="variations" id="sliders-container">
+                <div class="element-card">
+                    <h3>V3: Segmented LED Mobile BASS</h3>
+                    <div class="mobile-fader-wrapper metal"
+                        style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
+                        <div style="display: flex; gap: 12px; height: 180px; position: relative;">
+                            <div class="fader-led-container" id="fader-leds-3"
+                                style="position: relative; width: 12px; height: 100%;"></div>
+                            <div class="fader-track-container" id="fader-track-3"
+                                style="position: relative; width: 42px; height: 100%;">
+                                <!-- Recessed track slit -->
+                                <div class="fader-slit"
+                                    style="position: absolute; top: 12px; bottom: 12px; left: 50%; width: 10px; margin-left: -5px; background: #080808; border-radius: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);">
+                                </div>
+                                <!-- Thumb -->
+                                <div class="metal-fader" id="fader-handle-3"
+                                    style="position: absolute; top: 156px; left: 0; width: 100%; height: 24px; cursor: ns-resize;">
+                                    <div class="fader-embossed-notch glow-off"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-label glow-off" id="fader-label-3"
+                            style="text-align: center; margin-top: 15px;">BASS</div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
