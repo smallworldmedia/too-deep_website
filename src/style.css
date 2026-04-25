@@ -184,302 +184,502 @@ body {
   gap: 20px;
 }
 
-/* Play button wrapper — with label */
-.play-wrap {
+/* =========================================
+   TAPE DECK MECHANISM (EXTRUDED CSS)
+========================================= */
+:root {
+  --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.tape-deck-panel {
+  display: inline-flex;
+  gap: 4px;
+  padding: 12px 6px 2px 6px;
+  border-radius: 8px;
+  border: 1px solid #111;
+}
+
+.tape-deck-panel.metal {
+  background: #050505;
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.tape-btn {
+  position: relative;
+  width: 66px;
+  height: 70px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  /* Pop-up: slower spring-back with slight overshoot */
+  transition: transform 0.18s cubic-bezier(0.24, 1.05, 0.48, 1.05),
+    box-shadow 0.18s cubic-bezier(0.24, 1.05, 0.48, 1.05),
+    background 0.15s ease-out;
+  transform: translateY(-16px);
 }
 
-/* Play button — glassmorphism circle + drop shadow */
-#play-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1px solid rgba(114, 221, 249, 0.3);
-  background: rgba(10, 40, 80, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(114, 221, 249, 0.85);
-  cursor: pointer;
+.tape-btn.pressed {
+  transform: translateY(0);
+  transition: transform 0.04s cubic-bezier(0.2, 0, 1, 0.8),
+    box-shadow 0.04s cubic-bezier(0.2, 0, 1, 0.8),
+    background 0.06s ease-in;
+}
+
+/* Metal material */
+.metal .tape-btn {
+  background: linear-gradient(to bottom, #8a8a8a 0%, #767676 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    inset 1px 0 2px rgba(255, 255, 255, 0.2),
+    inset -1px 0 2px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 2px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(0, 0, 0, 0.5),
+    0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050,
+    0 5px 0 #4c4c4c, 0 6px 0 #484848, 0 7px 0 #444444, 0 8px 0 #404040,
+    0 9px 0 #3c3c3c, 0 10px 0 #383838, 0 11px 0 #343434, 0 12px 0 #303030,
+    0 13px 0 #2c2c2c, 0 14px 0 #282828, 0 15px 0 #242424, 0 16px 0 #202020,
+    0 20px 10px rgba(0, 0, 0, 0.8);
+}
+
+.metal .tape-btn.pressed {
+  background: linear-gradient(to bottom, #767676 0%, #606060 100%);
+  box-shadow:
+    inset 0 12px 10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Noise texture overlay */
+.tape-deck-panel .tape-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--noise-texture);
+  mix-blend-mode: overlay;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tape-btn .icon,
+.tape-btn .tape-led {
+  position: relative;
+  z-index: 2;
+}
+
+/* LED bar */
+.tape-led {
+  position: absolute;
+  top: 8px;
+  width: 22px;
+  height: 4px;
+  border-radius: 2px;
+  background: #661111;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+  transition: all 0.2s;
+}
+
+.tape-btn.play:not(.pressed) .tape-led {
+  animation: ledPulseRed 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes ledPulseRed {
+  0% {
+    background: #661111;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+  }
+
+  100% {
+    background: #ff4444;
+    box-shadow: 0 0 6px #ff4444, inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.tape-btn.play.pressed .tape-led {
+  animation: none;
+  background: #22ff55;
+  box-shadow: 0 0 8px #22ff55, inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Icon styling */
+.tape-btn .icon {
+  margin-top: 12px;
+  font-size: 24px;
+  color: #4a4a4a;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+}
+
+.tape-btn.pressed .icon {
+  color: #e0e0e0;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------------------------------
+   Pre-Save Button (Standalone Horizontal)
+--------------------------------- */
+.presave-panel {
+  display: inline-flex;
+  padding: 12px 6px 2px 6px;
+  border-radius: 8px;
+  border: 1px solid #111;
+}
+
+.presave-panel.metal {
+  background: #050505;
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.presave-panel .tape-btn.presave {
+  width: auto;
+  min-width: 120px;
+  height: fill;
+  padding: 0 22px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.presave-content {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  outline: none;
-  user-select: none;
-  -webkit-user-select: none;
+  gap: 2px;
+  position: relative;
+  z-index: 2;
+}
+
+.presave-heart {
   flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
-/* Nudge play triangle for optical center */
-#play-btn .play-icon {
-  margin-left: 2px;
-}
-
-.play-label {
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 9px;
-  letter-spacing: 2px;
+.presave-text {
+  font-size: 1.3em;
+  font-weight: 700;
+  letter-spacing: .2px;
   text-transform: uppercase;
-  color: rgba(114, 221, 249, 0.5);
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-#play-btn:hover {
-  background: rgba(10, 40, 80, 0.5);
-  border-color: rgba(114, 221, 249, 0.5);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 20px rgba(114, 221, 249, 0.15);
+.tape-btn.presave:not(.pressed) .presave-content {
+  animation: presavePulse 1.4s infinite alternate ease-in-out;
 }
 
-#play-btn:focus-visible {
-  outline: 2px solid rgba(114, 221, 249, 0.6);
-  outline-offset: 2px;
+.tape-btn.presave:not(.pressed) .presave-heart {
+  fill: #12080c;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+  animation: heartPulse 1.4s infinite alternate ease-in-out;
 }
 
-#play-btn.playing {
-  border-color: rgba(114, 221, 249, 0.5);
-  animation: pulse 2s ease-in-out infinite;
+.tape-btn.presave:not(.pressed) .presave-text {
+  color: #12080c;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.8);
+  animation: textPulse 1.4s infinite alternate ease-in-out;
 }
 
-@keyframes pulse {
+@keyframes presavePulse {
+  0% {
+    opacity: 0.8;
+  }
 
-  0%,
   100% {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 8px rgba(114, 221, 249, 0.1);
-  }
-
-  50% {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 20px rgba(114, 221, 249, 0.25);
+    opacity: 1;
   }
 }
 
-/* ========================================
-   GLOW CTA — prominent first-visit beacon
-   ======================================== */
-#play-btn.glow-cta {
-  animation: glow-beacon 2.5s ease-in-out infinite;
-  border-color: rgba(114, 221, 249, 0.6);
-}
+@keyframes heartPulse {
+  0% {
+    fill: #373737;
+    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+  }
 
-@keyframes glow-beacon {
-
-  0%,
   100% {
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.35),
-      0 0 12px rgba(114, 221, 249, 0.4),
-      0 0 28px rgba(114, 221, 249, 0.15);
-    border-color: rgba(114, 221, 249, 0.5);
-  }
-
-  50% {
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.35),
-      0 0 24px rgba(114, 221, 249, 0.9),
-      0 0 48px rgba(114, 221, 249, 0.5),
-      0 0 80px rgba(114, 221, 249, 0.2);
-    border-color: rgba(114, 221, 249, 1);
+    fill: #df72a6;
+    filter: drop-shadow(0 0 6px rgba(232, 67, 147, 0.6)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.4));
   }
 }
 
-/* ========================================
-   PRE-SAVE toggle — outside panel, stretches to controls-row width
-   ======================================== */
-.presave-toggle {
-  padding: 8px 20px 6px;
-  border-radius: 20px;
-  border: 1px solid rgba(114, 221, 249, 0.3);
-  background: rgba(10, 40, 80, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  cursor: pointer;
+@keyframes textPulse {
+  0% {
+    color: #373737;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  100% {
+    color: #df72a6;
+    text-shadow: 0 0 6px rgba(232, 67, 147, 0.6), 0 -1px 1px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.tape-btn.presave.pressed .presave-heart {
+  animation: none;
+  fill: #ff6bb5;
+  filter: drop-shadow(0 0 10px rgba(255, 107, 181, 0.7)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.tape-btn.presave.pressed .presave-text {
+  animation: none;
+  color: #ff6bb5;
+  text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   SUB CONTROL KNOB (BASS) — Ring LED V3
+========================================= */
+.sub-control-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  color: rgba(114, 221, 249, 0.8);
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: all 0.25s ease;
-  outline: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.presave-toggle:hover {
-  border-color: rgba(114, 221, 249, 0.5);
-  background: rgba(10, 40, 80, 0.5);
-  box-shadow: 0 0 12px rgba(114, 221, 249, 0.1);
-}
-
-.presave-toggle:focus-visible {
-  outline: 2px solid rgba(114, 221, 249, 0.6);
-  outline-offset: 2px;
-}
-
-/* Container structure for cross-fading */
-.toggle-text-wrap,
-.toggle-icon-wrap {
-  display: grid;
-  place-items: center;
-}
-
-.toggle-text-wrap>*,
-.toggle-icon-wrap>* {
-  grid-area: 1 / 1;
-  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.41, -0.01, .24, 1);
-}
-
-/* Default state */
-.toggle-text.close {
-  opacity: 0;
-  transform: translateY(4px);
-}
-
-.toggle-text.presave {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.icon-close {
-  opacity: 0;
-  transform: scale(0.5) rotate(-90deg);
-}
-
-.presave-toggle .arrow-down-wrapper {
-  opacity: 0.7;
-  transform: scale(1) rotate(0deg);
-  width: 12px;
-  height: 12px;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Expanded state overrides */
-#bottom-assembly.expanded .toggle-text.presave {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
-#bottom-assembly.expanded .toggle-text.close {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#bottom-assembly.expanded .presave-toggle .arrow-down-wrapper {
-  opacity: 0;
-  transform: scale(0.5) rotate(90deg);
-}
-
-#bottom-assembly.expanded .icon-close {
-  opacity: 0.7;
-  transform: scale(1) rotate(0deg);
-}
-
-/* Arrow scroll animation details */
-.presave-toggle .arrow-down-scroll {
-  display: flex;
-  flex-direction: column;
-  height: 24px;
-  animation: arrow-scroll 1.5s linear infinite;
-}
-
-@keyframes arrow-scroll {
-  0% {
-    transform: translateY(-12px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.presave-toggle .arrow-down {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-}
-
-/* ========================================
-   SUB KNOB — rotary control + drop shadow
-   ======================================== */
-.sub-knob-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
 }
 
 .sub-knob {
-  width: 48px;
-  height: 48px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  border: 1px solid var(--knob-border, rgba(114, 221, 249, 0.2));
-  background: rgba(10, 40, 80, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   position: relative;
   cursor: pointer;
-  touch-action: none;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: var(--knob-shadow, 0 4px 16px rgba(0, 0, 0, 0.35));
-  --val-deg: calc(210deg + (var(--val) / 2) * 300deg);
+  background: linear-gradient(135deg, #a0a0a0 0%, #767676 40%, #606060 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.7),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(0, 0, 0, 0.5),
+    0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050, 0 5px 0 #4c4c4c,
+    0 6px 0 #464646, 0 7px 0 #404040, 0 8px 0 #3a3a3a, 0 9px 0 #323232,
+    0 10px 0 #2a2a2a, 0 11px 0 #222222, 0 12px 0 #1a1a1a,
+    0 18px 15px rgba(0, 0, 0, 0.8);
 }
 
-.sub-knob:focus-visible {
-  outline: 2px solid rgba(114, 221, 249, 0.6);
-  outline-offset: 2px;
-}
-
-/* Pointer line — rotates around knob center */
-.knob-pointer {
+.sub-knob::before {
+  content: '';
   position: absolute;
-  width: 2px;
-  height: 14px;
-  background: var(--knob-pointer, rgba(114, 221, 249, 0.9));
-  border-radius: 1px;
-  left: calc(50% - 1px);
-  top: 50%;
-  margin-top: -14px;
-  transform-origin: 1px 14px;
-  transform: rotate(var(--val-deg));
-}
-
-/* Tick marks */
-.knob-tick {
-  position: absolute;
-  width: 2px;
-  height: 2px;
+  inset: 2px;
   border-radius: 50%;
-  background: rgba(114, 221, 249, 0.3);
+  background: repeating-conic-gradient(#555 0deg, #999 1deg, #555 2deg, #bbb 3deg, #555 4deg);
+  opacity: 0.15;
+  mix-blend-mode: multiply;
 }
 
-.knob-tick-min {
-  bottom: 6px;
-  left: 8px;
+#bass-knob {
+  background: transparent;
+  box-shadow: none;
+  border: none;
 }
 
-.knob-tick-max {
-  bottom: 6px;
-  right: 8px;
+.sub-knob-floor-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 14px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.sub-knob-label {
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--knob-label, rgba(114, 221, 249, 0.5));
-  transition: color 0.15s ease;
-  user-select: none;
-  -webkit-user-select: none;
+.sub-knob-pivot {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.pivot-3 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  background: repeating-conic-gradient(from 0deg, #333 0deg, #666 1.8deg, #888 5deg, #333 5.4deg);
+}
+
+.pivot-3-cap {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  transform: translateY(-8px);
+  background: linear-gradient(135deg, #8a8a8a 0%, #555 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.52),
+    0 1px 0 rgba(0, 0, 0, 0.6), 0 2px 0 #505050, 0 3px 0 #484848,
+    0 4px 0 #404040, 0 5px 0 #383838, 0 6px 0 #303030,
+    0 7px 0 #282828, 0 8px 0 #202020,
+    0 12px 10px rgba(0, 0, 0, 0.9);
+}
+
+.pivot-3-cap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image: var(--noise-texture);
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.sub-knob-pivot-notch {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  top: -4px;
+  left: 4px;
+  border-radius: 50%;
+}
+
+.knob-embossed-notch {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  margin-left: -3px;
+  width: 4.5px;
+  height: 12px;
+  background: #444;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 1px 1px rgba(21, 21, 21, 0.3);
+  z-index: 3;
+  transition: background 0.1s, box-shadow 0.1s;
+}
+
+.knob-embossed-notch.glow-on {
+  background: #00ffd5;
+  box-shadow: 0 0 8px rgba(0, 229, 255, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.v3-wrapper {
+  position: relative;
+  width: 94px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.v3-wrapper .sub-label {
+  margin-top: 0;
+}
+
+/* LED ring segments */
+.led-segment-notch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 8px;
+  background: var(--seg-clr);
+  border-radius: 1.4px;
+  opacity: 0.15;
+  transition: opacity 0.1s, box-shadow 0.1s;
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 1);
+  z-index: 1;
+}
+
+.led-segment-notch.active {
+  opacity: 1;
+  box-shadow: 0 0 10px var(--seg-clr), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+}
+
+/* Hardware label */
+.sub-label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #4a4a4a;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+}
+
+.sub-label.glow-on {
+  color: #e0e0e0;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   Mobile BASS Fader — Segmented LED
+========================================= */
+.mobile-fader-wrapper {
+  padding: 12px 6px 2px 6px;
+  border-radius: 8px;
+  border: 1px solid #111;
+}
+
+.mobile-fader-wrapper.metal {
+  background: #050505;
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.fader-led-notch {
+  position: absolute;
+  width: 12px;
+  height: 3.6px;
+  left: 0;
+  margin-bottom: -2px;
+  border-radius: 1.4px;
+  opacity: 0.15;
+  background: var(--seg-clr);
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 1);
+  transition: opacity 0.1s, box-shadow 0.1s;
+  z-index: 1;
+}
+
+.fader-led-notch.active {
+  opacity: 1;
+  z-index: 3;
+  box-shadow: 0 0 10px var(--seg-clr), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.metal-fader {
+  background: linear-gradient(135deg, #6c6c6c 0%, #3e3e3e 100%);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+    0 2px 2px rgba(0, 0, 0, 0.8),
+    0 6px 8px rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.metal-fader::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background-image: var(--noise-texture);
+  mix-blend-mode: overlay;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.fader-embossed-notch {
+  position: relative;
+  width: 16px;
+  height: 4px;
+  background: #444;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 3;
+  transition: background 0.1s, box-shadow 0.1s;
+}
+
+.fader-embossed-notch.glow-on {
+  background: #00ffd5;
+  box-shadow: 0 0 8px rgba(0, 229, 255, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive: desktop knob / mobile fader */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
 }
 
 /* ========================================
@@ -647,9 +847,18 @@ body {
    REDUCED MOTION
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
-  #play-btn.glow-cta {
+  .tape-btn {
+    transition-duration: 0ms;
+  }
+
+  .tape-btn.play:not(.pressed) .tape-led {
     animation: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 24px rgba(114, 221, 249, 0.6), 0 0 48px rgba(114, 221, 249, 0.3);
+  }
+
+  .tape-btn.presave:not(.pressed) .presave-content,
+  .tape-btn.presave:not(.pressed) .presave-heart,
+  .tape-btn.presave:not(.pressed) .presave-text {
+    animation: none;
   }
 
   .tier2-inner {
@@ -659,20 +868,20 @@ body {
   #panel-backdrop {
     transition-duration: 120ms;
   }
-
-  .presave-toggle .arrow-down-wrapper {
-    transition-duration: 120ms;
-  }
-
-  .presave-toggle .arrow-down-scroll {
-    animation: none;
-  }
 }
 
 /* ========================================
-   MOBILE ≤ 768px — vertical buttons
+   MOBILE ≤ 768px — show fader, hide knob
    ======================================== */
 @media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
   .platform-buttons {
     flex-direction: column;
     align-items: stretch;
@@ -682,6 +891,10 @@ body {
 
   .platform-pill {
     height: 42px;
+  }
+
+  .controls-row {
+    gap: 10px;
   }
 }
 

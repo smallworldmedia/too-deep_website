@@ -42,57 +42,69 @@
 
   <!-- Bottom assembly — controls + presave + links panel -->
   <div id="bottom-assembly">
-    <!-- Controls group — play, sub, presave stacked -->
+    <!-- Controls group — tape deck + presave + bass -->
     <div class="controls-group">
       <div class="controls-row">
-        <div class="play-wrap">
-          <button id="play-btn" aria-label="Play audio">
-            <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="8,4 20,12 8,20" />
-            </svg>
+        <!-- Tape Deck: Play + Pause -->
+        <div class="tape-deck-panel metal">
+          <button class="tape-btn play" id="tape-play" aria-label="Play audio">
+            <div class="tape-led"></div>
+            <span class="icon">▶</span>
           </button>
-          <span class="play-label">PLAY</span>
+          <button class="tape-btn pause pressed" id="tape-pause" aria-label="Pause audio">
+            <span class="icon">⏸</span>
+          </button>
         </div>
 
-        <div class="sub-knob-wrap">
-          <div class="sub-knob" id="sub-knob" role="slider" aria-label="Sub" aria-valuemin="0" aria-valuemax="2"
-            aria-valuenow="1" tabindex="0" style="--val: 1">
-            <div class="knob-pointer"></div>
-            <div class="knob-tick knob-tick-min"></div>
-            <div class="knob-tick knob-tick-max"></div>
-          </div>
-          <span class="sub-knob-label">SUB</span>
+        <!-- Pre-Save Button (Standalone Horizontal) -->
+        <div class="presave-panel metal">
+          <button class="tape-btn presave" id="tape-presave" aria-expanded="false" aria-controls="panel-tier-2">
+            <span class="presave-content">
+              <svg class="presave-heart" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+              <span class="presave-text">Presave</span>
+            </span>
+          </button>
         </div>
-      </div>
 
-      <!-- PRE-SAVE toggle — same width as controls-row -->
-      <button class="presave-toggle" aria-expanded="false" aria-controls="panel-tier-2">
-        <div class="toggle-text-wrap">
-          <span class="toggle-text presave">PRE-SAVE</span>
-          <span class="toggle-text close">CLOSE</span>
-        </div>
-        <div class="toggle-icon-wrap">
-          <div class="arrow-down-wrapper">
-            <div class="arrow-down-scroll">
-              <svg class="arrow-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <polyline points="19 12 12 19 5 12" />
-              </svg>
-              <svg class="arrow-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <polyline points="19 12 12 19 5 12" />
-              </svg>
+        <!-- BASS Sub Knob (Desktop) -->
+        <div class="sub-control-wrapper metal v3-wrapper desktop-only">
+          <div class="knob-cluster" style="position: relative; width: 94px; height: 94px;">
+            <div class="knob-led-ring-outer" id="bass-ring" style="position: absolute; inset: 0;"></div>
+            <div class="sub-knob" id="bass-knob" data-rotation="210"
+              style="position: absolute; top: 12px; left: 12px; margin: 0; z-index: 2;">
+              <div class="sub-knob-floor-shadow"></div>
+              <div class="sub-knob-pivot pivot-3" style="position: absolute; inset: 0;"></div>
+              <div class="pivot-3-cap"></div>
+              <div class="sub-knob-pivot-notch" style="pointer-events: none;">
+                <div class="knob-embossed-notch glow-off"></div>
+              </div>
             </div>
           </div>
-          <svg class="icon-close" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <div class="sub-label glow-off" id="bass-label">BASS</div>
         </div>
-      </button>
+
+        <!-- BASS Fader (Mobile) -->
+        <div class="mobile-fader-wrapper metal mobile-only"
+          style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
+          <div style="display: flex; gap: 12px; height: 180px; position: relative;">
+            <div class="fader-led-container" id="fader-leds" style="position: relative; width: 12px; height: 100%;">
+            </div>
+            <div class="fader-track-container" id="fader-track" style="position: relative; width: 42px; height: 100%;">
+              <div class="fader-slit"
+                style="position: absolute; top: 12px; bottom: 12px; left: 50%; width: 10px; margin-left: -5px; background: #080808; border-radius: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);">
+              </div>
+              <div class="metal-fader" id="fader-handle"
+                style="position: absolute; top: 156px; left: 0; width: 100%; height: 24px; cursor: ns-resize;">
+                <div class="fader-embossed-notch glow-off"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sub-label glow-off" id="fader-label" style="text-align: center; margin-top: 15px;">BASS</div>
+        </div>
+      </div>
     </div>
 
     <!-- Links panel -->

@@ -323,8 +323,10 @@ const CausticsShader = {
       vec4 causticNoise = getNoise(p) * causticIntensity;
 
       #ifdef MOBILE
-        // Single-pass caustics — skip double refraction to save GPU
-        float normalized = pow(0.5 + 0.5 * causticNoise.w, 2.0);
+        // Two-pass caustics — one refraction layer for realism, skip third (balancer) call
+        float refraction = mix(0.25, 1.3, 1.0);
+        vec4 noise2 = getNoise(p - vec3(causticNoise.xyz / 32.0) * refraction);
+        float normalized = pow(0.5 + 0.5 * noise2.w, 2.0);
         vec3 causticColor = vec3(0.792, 0.914, 0.933) * (normalized + 0.2 * (1.0 - normalized));
         causticColor *= causticIntensity;
       #else

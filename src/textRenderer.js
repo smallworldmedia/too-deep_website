@@ -28,7 +28,7 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
     const MIN_MOBILE_SCALE = 0.42;
-    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.22, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
 
     // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
