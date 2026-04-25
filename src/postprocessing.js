@@ -50,7 +50,7 @@ const FogShader = {
       float amp = 1.0 + 0.22 * 10.0;
       float xp = sqrt(2.0);
       float halfxp = xp * 0.5;
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < FBM_ITERS; i++) {
         float theta = uTime * 0.05 + float(i);
         p.xy *= xp;
         p.xy += sin(rota * p.xy * xp + theta) * 0.2;
@@ -172,8 +172,8 @@ const BloomShader = {
       // Blur
       vec3 blurred = vec3(0.0);
       float total = 0.0;
-      for (int x = -4; x <= 4; x++) {
-        for (int y = -4; y <= 4; y++) {
+      for (int x = -BLOOM_RADIUS; x <= BLOOM_RADIUS; x++) {
+        for (int y = -BLOOM_RADIUS; y <= BLOOM_RADIUS; y++) {
           float weight = exp(-0.5 * float(x*x + y*y) / 4.0);
           vec2 offset = vec2(float(x), float(y)) * 2.0 / uResolution;
           offset.x /= aspectRatio;
@@ -192,6 +192,7 @@ const BloomShader = {
       blurred *= vec3(0.094, 0.325, 0.349);
       vec4 finalColor = mix(color, color + vec4(blurred, 0.0), 0.525);
 
+      #if BLOOM_SECOND_PASS
       // Second bloom pass — wider, softer
       vec3 bloom2 = vec3(0.0);
       float total2 = 0.0;
@@ -207,6 +208,9 @@ const BloomShader = {
         }
       }
       bloom2 /= total2;
+      #else
+      vec3 bloom2 = blurred * 0.5;
+      #endif
 
       // Dither (GLSL1 compatible)
       float dither = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
@@ -377,7 +381,7 @@ const WaterRippleSimShader = {
     void main() {
       vec2 aspect = vec2(uResolution.x / uResolution.y, 1.0);
       // Full UV range — no bounding box restriction
-      vec2 texelSize = 1.0 / vec2(512.0);
+      vec2 texelSize = 1.0 / vec2(float(SIM_SIZE));
 
       float damping = mix(0.8, 0.999, 0.91);
 
@@ -453,7 +457,7 @@ const CymaticsSimShader = {
     }
 
     void main() {
-      vec2 texelSize = 1.0 / vec2(512.0);
+      vec2 texelSize = 1.0 / vec2(float(SIM_SIZE));
       float damping = mix(0.8, 0.999, 0.2);
 
       vec4 data = texture2D(tPrev, vUv);
@@ -569,7 +573,7 @@ const CymaticsCompositeShader = {
     varying vec2 vUv;
 
     vec3 calculateNormal(vec2 uv) {
-      float stepSz = 1.0 / 512.0;
+      float stepSz = 1.0 / float(SIM_SIZE);
       float strength = 4.0;
       float stepSize = 2.0;
       float s = stepSize * stepSz;
@@ -700,7 +704,7 @@ const WaterRippleCompositeShader = {
     varying vec2 vUv;
 
     vec3 calculateNormal(vec2 uv) {
-      float stepSz = 1.0 / 512.0;
+      float stepSz = 1.0 / float(SIM_SIZE);
       float strength = 6.5;
       float stepSize = 2.8;
       float s = stepSize * stepSz;
@@ -757,7 +761,7 @@ const WaterRippleCompositeShader = {
 // ============================================================
 // SETUP FUNCTION
 // ============================================================
-export function createPostProcessing(renderer, scene, camera) {
+export function createPostProcessing(renderer, scene, camera, isMobile = false) {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
@@ -767,13 +771,30 @@ export function createPostProcessing(renderer, scene, camera) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // 2. Fog pass
-  const fogPass = new ShaderPass(FogShader);
+  // 2. Fog pass — reduced FBM iterations on mobile
+  const fogPass = new ShaderPass({
+    uniforms: {
+      tDiffuse: { value: null },
+      uTime: { value: 0 },
+      uResolution: { value: new THREE.Vector2() },
+      uMousePos: { value: new THREE.Vector2(0.5, 0.5) },
+    },
+    vertexShader: FogShader.vertexShader,
+    fragmentShader: `#define FBM_ITERS ${isMobile ? 2 : 3}\n` + FogShader.fragmentShader,
+  });
   fogPass.uniforms.uResolution.value.set(w, h);
   composer.addPass(fogPass);
 
-  // 3. Bloom pass (combined fast + full)
-  const bloomPass = new ShaderPass(BloomShader);
+  // 3. Bloom pass — reduced radius + no second pass on mobile
+  const bloomPass = new ShaderPass({
+    uniforms: {
+      tDiffuse: { value: null },
+      uResolution: { value: new THREE.Vector2() },
+      uAudioHigh: { value: 0 },
+    },
+    vertexShader: BloomShader.vertexShader,
+    fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 2 : 4}\n#define BLOOM_SECOND_PASS ${isMobile ? 0 : 1}\n` + BloomShader.fragmentShader,
+  });
   bloomPass.uniforms.uResolution.value.set(w, h);
   composer.addPass(bloomPass);
 
@@ -783,8 +804,8 @@ export function createPostProcessing(renderer, scene, camera) {
   composer.addPass(causticsPass);
 
   // 5. Cymatics — audio-driven ping-pong water simulation
-  const cymaticsSize = 512;
-  const cymaticsRT1 = new THREE.WebGLRenderTarget(cymaticsSize, cymaticsSize, {
+  const simSize = isMobile ? 256 : 512;
+  const cymaticsRT1 = new THREE.WebGLRenderTarget(simSize, simSize, {
     minFilter: THREE.LinearFilter,
     magFilter: THREE.LinearFilter,
     wrapS: THREE.ClampToEdgeWrapping,
@@ -805,7 +826,7 @@ export function createPostProcessing(renderer, scene, camera) {
       uResolution: { value: new THREE.Vector2(w, h) },
     },
     vertexShader: CymaticsSimShader.vertexShader,
-    fragmentShader: CymaticsSimShader.fragmentShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n` + CymaticsSimShader.fragmentShader,
   });
 
   const cymaticsQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), cymaticsSimMaterial);
@@ -817,13 +838,20 @@ export function createPostProcessing(renderer, scene, camera) {
   let cymaticsPrev = cymaticsRT2;
 
   // Cymatics composite pass
-  const cymaticsCompositePass = new ShaderPass(CymaticsCompositeShader);
+  const cymaticsCompositePass = new ShaderPass({
+    uniforms: {
+      tDiffuse: { value: null },
+      tCymatics: { value: null },
+      uResolution: { value: new THREE.Vector2() },
+    },
+    vertexShader: CymaticsCompositeShader.vertexShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n` + CymaticsCompositeShader.fragmentShader,
+  });
   cymaticsCompositePass.uniforms.uResolution.value.set(w, h);
   composer.addPass(cymaticsCompositePass);
 
   // 6. Water ripple — cursor/touch-driven ping-pong simulation
-  const rippleSize = 512;
-  const rippleRT1 = new THREE.WebGLRenderTarget(rippleSize, rippleSize, {
+  const rippleRT1 = new THREE.WebGLRenderTarget(simSize, simSize, {
     minFilter: THREE.LinearFilter,
     magFilter: THREE.LinearFilter,
     wrapS: THREE.ClampToEdgeWrapping,
@@ -841,7 +869,7 @@ export function createPostProcessing(renderer, scene, camera) {
       uResolution: { value: new THREE.Vector2(w, h) },
     },
     vertexShader: WaterRippleSimShader.vertexShader,
-    fragmentShader: WaterRippleSimShader.fragmentShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n` + WaterRippleSimShader.fragmentShader,
   });
 
   const rippleQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), rippleSimMaterial);
@@ -853,14 +881,25 @@ export function createPostProcessing(renderer, scene, camera) {
   let prevRT = rippleRT2;
 
   // Water ripple composite pass
-  const rippleCompositePass = new ShaderPass(WaterRippleCompositeShader);
+  const rippleCompositePass = new ShaderPass({
+    uniforms: {
+      tDiffuse: { value: null },
+      tRipple: { value: null },
+      uResolution: { value: new THREE.Vector2() },
+    },
+    vertexShader: WaterRippleCompositeShader.vertexShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n` + WaterRippleCompositeShader.fragmentShader,
+  });
   rippleCompositePass.uniforms.uResolution.value.set(w, h);
   composer.addPass(rippleCompositePass);
 
-  // 7. FXAA anti-aliasing — smooths jagged text edges from ripple refraction
-  const fxaaPass = new ShaderPass(FXAAShader);
-  fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
-  composer.addPass(fxaaPass);
+  // 7. FXAA anti-aliasing — skip on mobile for performance
+  let fxaaPass = null;
+  if (!isMobile) {
+    fxaaPass = new ShaderPass(FXAAShader);
+    fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
+    composer.addPass(fxaaPass);
+  }
 
   function update(time, mousePos, prevMousePos, audioBands, subGain, timeSinceOnset) {
     fogPass.uniforms.uTime.value = time;
@@ -917,7 +956,7 @@ export function createPostProcessing(renderer, scene, camera) {
     cymaticsSimMaterial.uniforms.uResolution.value.set(w, h);
     rippleCompositePass.uniforms.uResolution.value.set(w, h);
     rippleSimMaterial.uniforms.uResolution.value.set(w, h);
-    fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
+    if (fxaaPass) fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
   }
 
   return { composer, update, onResize };

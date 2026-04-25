@@ -477,6 +477,122 @@ h2 {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
 }
 
+/* ---------------------------------
+   Pre-Save Button (Standalone Horizontal)
+--------------------------------- */
+.presave-panel {
+    display: inline-flex;
+    padding: 12px 6px 2px 6px;
+    border-radius: 8px;
+    border: 1px solid #111;
+    margin-top: 15px;
+}
+
+.presave-panel.metal {
+    background: #050505;
+    box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Override tape-btn dimensions for horizontal layout */
+.presave-panel .tape-btn.presave {
+    width: auto;
+    min-width: 120px;
+    height: 44px;
+    padding: 0 16px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.presave-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.presave-heart {
+    flex-shrink: 0;
+}
+
+.presave-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Unpressed: blinking pink heart + text */
+.tape-btn.presave:not(.pressed) .presave-content {
+    animation: presavePulse 1.4s infinite alternate ease-in-out;
+}
+
+.tape-btn.presave:not(.pressed) .presave-heart {
+    fill: #4a2030;
+    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+}
+
+.tape-btn.presave:not(.pressed) .presave-text {
+    color: #4a2030;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes presavePulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.tape-btn.presave:not(.pressed) .presave-heart {
+    animation: heartPulse 1.4s infinite alternate ease-in-out;
+}
+
+.tape-btn.presave:not(.pressed) .presave-text {
+    animation: textPulse 1.4s infinite alternate ease-in-out;
+}
+
+@keyframes heartPulse {
+    0% {
+        fill: #4a2030;
+        filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+    }
+
+    100% {
+        fill: #e84393;
+        filter: drop-shadow(0 0 6px rgba(232, 67, 147, 0.6)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+    }
+}
+
+@keyframes textPulse {
+    0% {
+        color: #4a2030;
+        text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    100% {
+        color: #e84393;
+        text-shadow: 0 0 8px rgba(232, 67, 147, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* Pressed: solid bright saturated pink, no blink */
+.tape-btn.presave.pressed .presave-heart {
+    animation: none;
+    fill: #ff6bb5;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 181, 0.7)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.tape-btn.presave.pressed .presave-text {
+    animation: none;
+    color: #ff6bb5;
+    text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
 .mechanical-button:active {
     transform: translateY(4px);
     box-shadow:

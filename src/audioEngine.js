@@ -34,9 +34,22 @@ export class AudioEngine {
         this.duration = frequencyData.duration;
     }
 
-    async init() {
+    /**
+     * Phase 1 — MUST be called synchronously inside a user gesture (click/tap).
+     * Creates the AudioContext and resumes it while the gesture is still valid.
+     */
+    createContext() {
+        if (this.audioContext) return;
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Resume immediately — iOS requires this within the gesture
+        this.audioContext.resume();
+    }
 
+    /**
+     * Phase 2 — async fetch + decode. Can be called after gesture expires.
+     */
+    async loadAudio() {
+        if (this.audioBuffer) return;
         const response = await fetch('/too-deep_snippet-01.wav');
         const arrayBuffer = await response.arrayBuffer();
         this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);

@@ -299,3 +299,11 @@ function setupTapeDeckLogic(playId, pauseId) {
 setupTapeDeckLogic('tape-play-1', 'tape-pause-1');
 setupTapeDeckLogic('tape-play-2', 'tape-pause-2');
 setupTapeDeckLogic('tape-play-3', 'tape-pause-3');
+
+// Pre-save button: independent toggle (not interlocked with play/pause)
+const presaveBtn = document.getElementById('tape-presave-3');
+if (presaveBtn) {
+    presaveBtn.addEventListener('click', () => {
+        presaveBtn.classList.toggle('pressed');
+    });
+}

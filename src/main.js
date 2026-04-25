@@ -33,6 +33,12 @@ const BRAND_ICONS = {
 // ================================================================
 // RENDERER
 // ================================================================
+// ================================================================
+// MOBILE DETECTION
+// ================================================================
+const isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth <= 768;
+const MAX_PIXEL_RATIO = isMobile ? 1.5 : 2;
+
 const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -40,7 +46,7 @@ const renderer = new THREE.WebGLRenderer({
     powerPreference: 'high-performance',
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
 renderer.setClearColor(0x000000, 1);
 
 // ================================================================
@@ -51,7 +57,7 @@ const { scene, camera, uniforms, onResize: sceneResize } = createScene(renderer)
 // ================================================================
 // POST PROCESSING
 // ================================================================
-const { composer, update: ppUpdate, onResize: ppResize } = createPostProcessing(renderer, scene, camera);
+const { composer, update: ppUpdate, onResize: ppResize } = createPostProcessing(renderer, scene, camera, isMobile);
 
 // ================================================================
 // AUDIO ENGINE
@@ -336,10 +342,16 @@ function initPlayButton() {
             localStorage.setItem('tooDeep.glowSeen', '1');
         }
 
-        if (!audioEngine.audioContext) {
-            await audioEngine.init();
+        // Phase 1: Create + resume AudioContext synchronously in the gesture
+        // (iOS expires gestures after any await — this MUST come first)
+        audioEngine.createContext();
+
+        // Phase 2: Load audio if needed (async, gesture can expire)
+        if (!audioEngine.audioBuffer) {
+            await audioEngine.loadAudio();
         }
-        audioEngine.toggle();
+
+        await audioEngine.toggle();
         playBtn.classList.toggle('playing', audioEngine.getIsPlaying());
         playBtn.innerHTML = audioEngine.getIsPlaying() ? PAUSE_SVG : PLAY_SVG;
     });
@@ -389,7 +401,7 @@ function onResize() {
     const h = window.innerHeight;
 
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
 
     sceneResize();
     ppResize();
