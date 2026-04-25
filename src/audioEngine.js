@@ -48,7 +48,7 @@ export class AudioEngine {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         // 2. Create HTML5 audio element — iOS handles WAV decoding natively
-        this.audioElement = new Audio('/too-deep_snippet-01.wav');
+        this.audioElement = new Audio('/too-deep_snippet-02.wav');
         this.audioElement.loop = true;
         this.audioElement.preload = 'auto';
         this.audioElement.crossOrigin = 'anonymous';
