@@ -540,7 +540,7 @@ h2 {
 
 @keyframes presavePulse {
     0% {
-        opacity: 0.5;
+        opacity: 0.8;
     }
 
     100% {
@@ -558,25 +558,25 @@ h2 {
 
 @keyframes heartPulse {
     0% {
-        fill: #4a2030;
+        fill: #373737;
         filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
     }
 
     100% {
-        fill: #e84393;
-        filter: drop-shadow(0 0 6px rgba(232, 67, 147, 0.6)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+        fill: #df72a6;
+        filter: drop-shadow(0 0 6px rgba(232, 67, 147, 0.6)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.4));
     }
 }
 
 @keyframes textPulse {
     0% {
-        color: #4a2030;
-        text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.1);
+        color: #373737;
+        text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(255, 255, 255, 0.1);
     }
 
     100% {
-        color: #e84393;
-        text-shadow: 0 0 8px rgba(232, 67, 147, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.6);
+        color: #df72a6;
+        text-shadow: 0 0 6px rgba(232, 67, 147, 0.6), 0 -1px 1px rgba(0, 0, 0, 0.4);
     }
 }
 

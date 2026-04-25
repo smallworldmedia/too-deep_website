@@ -3,6 +3,10 @@
  * Reads frequency-data.json and provides smoothed band values per frame
  * Supports proper pause/resume and continuous looping
  * 
+ * Uses HTML5 <audio> element + MediaElementSource for maximum iOS compatibility.
+ * The <audio> element handles decoding natively — avoids decodeAudioData() issues
+ * on mobile Safari with large WAV files.
+ * 
  * lowOnset is passed through RAW (no smoothing) — it's an instantaneous event
  */
 
@@ -16,13 +20,10 @@ export class AudioEngine {
     constructor() {
         this.audioContext = null;
         this.gainNode = null;
-        this.sourceNode = null;
-        this.audioBuffer = null;
+        this.mediaSource = null;
+        this.audioElement = null;
         this.isPlaying = false;
-
-        // Pause/resume tracking
-        this.pauseOffset = 0;
-        this.playStartTime = 0;
+        this.ready = false;
 
         // Smoothed band values (lowOnset is raw, not smoothed)
         this.bands = { low: 0, mid: 0, high: 0, lowOnset: 0 };
@@ -37,65 +38,80 @@ export class AudioEngine {
 
     /**
      * Phase 1 — MUST be called synchronously inside a user gesture (click/tap).
-     * Creates the AudioContext and resumes it while the gesture is still valid.
+     * Creates the AudioContext, audio element, and connects everything.
+     * iOS requires AudioContext creation + resume within the gesture.
      */
     createContext() {
         if (this.audioContext) return;
+
+        // 1. Create AudioContext
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        // Create a GainNode — forces proper audio graph initialization on mobile
+
+        // 2. Create HTML5 audio element — iOS handles WAV decoding natively
+        this.audioElement = new Audio('/too-deep_snippet-01.wav');
+        this.audioElement.loop = true;
+        this.audioElement.preload = 'auto';
+        this.audioElement.crossOrigin = 'anonymous';
+        // Prevent iOS from showing media controls in control center
+        this.audioElement.setAttribute('playsinline', '');
+
+        // 3. Route through Web Audio API for potential future analysis
+        this.mediaSource = this.audioContext.createMediaElementSource(this.audioElement);
         this.gainNode = this.audioContext.createGain();
         this.gainNode.gain.value = 1.0;
+        this.mediaSource.connect(this.gainNode);
         this.gainNode.connect(this.audioContext.destination);
-        // Resume immediately — iOS requires this within the gesture
+
+        // 4. Resume immediately — iOS requires this within the gesture
         this.audioContext.resume();
+
+        // 5. Mark ready once audio element can play
+        this.audioElement.addEventListener('canplaythrough', () => {
+            this.ready = true;
+        }, { once: true });
+
+        // If already cached, mark ready immediately
+        if (this.audioElement.readyState >= 4) {
+            this.ready = true;
+        }
     }
 
     /**
-     * Phase 2 — async fetch + decode. Can be called after gesture expires.
+     * Wait for the audio element to be ready to play.
+     * Returns immediately if already ready.
      */
-    async loadAudio() {
-        if (this.audioBuffer) return;
-        try {
-            const response = await fetch('/too-deep_snippet-01.wav');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const arrayBuffer = await response.arrayBuffer();
-            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-        } catch (err) {
-            console.warn('[AudioEngine] loadAudio failed:', err);
-        }
+    async waitForReady() {
+        if (this.ready) return;
+        return new Promise((resolve) => {
+            this.audioElement.addEventListener('canplaythrough', resolve, { once: true });
+            // Safety timeout — don't block forever
+            setTimeout(resolve, 8000);
+        });
     }
 
     async play() {
         if (this.isPlaying) return;
-        if (!this.audioContext || !this.audioBuffer) return;
+        if (!this.audioContext || !this.audioElement) return;
 
-        // Always ensure context is running before play
+        // Ensure context is running
         if (this.audioContext.state !== 'running') {
             await this.audioContext.resume();
         }
 
-        if (this.pauseOffset >= this.duration) {
-            this.pauseOffset = 0;
+        // Wait for audio to be ready
+        await this.waitForReady();
+
+        try {
+            await this.audioElement.play();
+            this.isPlaying = true;
+        } catch (err) {
+            console.warn('[AudioEngine] play() failed:', err);
         }
-
-        this.sourceNode = this.audioContext.createBufferSource();
-        this.sourceNode.buffer = this.audioBuffer;
-        this.sourceNode.loop = true;
-        this.sourceNode.connect(this.gainNode);
-
-        this.sourceNode.start(0, this.pauseOffset);
-        this.playStartTime = this.audioContext.currentTime;
-        this.isPlaying = true;
     }
 
     pause() {
-        if (!this.isPlaying || !this.sourceNode) return;
-
-        const elapsed = this.audioContext.currentTime - this.playStartTime;
-        this.pauseOffset = (this.pauseOffset + elapsed) % this.duration;
-
-        this.sourceNode.stop();
-        this.sourceNode = null;
+        if (!this.isPlaying || !this.audioElement) return;
+        this.audioElement.pause();
         this.isPlaying = false;
     }
 
@@ -108,11 +124,8 @@ export class AudioEngine {
     }
 
     getCurrentTime() {
-        if (this.isPlaying) {
-            const raw = this.pauseOffset + (this.audioContext.currentTime - this.playStartTime);
-            return raw % this.duration;
-        }
-        return this.pauseOffset;
+        if (!this.audioElement) return 0;
+        return this.audioElement.currentTime % this.duration;
     }
 
     _smoothValue(current, target) {

@@ -342,14 +342,9 @@ function initPlayButton() {
             localStorage.setItem('tooDeep.glowSeen', '1');
         }
 
-        // Phase 1: Create + resume AudioContext synchronously in the gesture
+        // Create + resume AudioContext synchronously in the gesture
         // (iOS expires gestures after any await — this MUST come first)
         audioEngine.createContext();
-
-        // Phase 2: Load audio if needed (async, gesture can expire)
-        if (!audioEngine.audioBuffer) {
-            await audioEngine.loadAudio();
-        }
 
         await audioEngine.toggle();
         playBtn.classList.toggle('playing', audioEngine.getIsPlaying());
