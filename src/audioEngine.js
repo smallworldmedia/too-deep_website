@@ -15,6 +15,7 @@ const RELEASE_FACTOR = 0.18; // How slow the value falls (higher = slower/smooth
 export class AudioEngine {
     constructor() {
         this.audioContext = null;
+        this.gainNode = null;
         this.sourceNode = null;
         this.audioBuffer = null;
         this.isPlaying = false;
@@ -41,6 +42,10 @@ export class AudioEngine {
     createContext() {
         if (this.audioContext) return;
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Create a GainNode — forces proper audio graph initialization on mobile
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.gain.value = 1.0;
+        this.gainNode.connect(this.audioContext.destination);
         // Resume immediately — iOS requires this within the gesture
         this.audioContext.resume();
     }
@@ -50,16 +55,22 @@ export class AudioEngine {
      */
     async loadAudio() {
         if (this.audioBuffer) return;
-        const response = await fetch('/too-deep_snippet-01.wav');
-        const arrayBuffer = await response.arrayBuffer();
-        this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+        try {
+            const response = await fetch('/too-deep_snippet-01.wav');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const arrayBuffer = await response.arrayBuffer();
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+        } catch (err) {
+            console.warn('[AudioEngine] loadAudio failed:', err);
+        }
     }
 
     async play() {
         if (this.isPlaying) return;
-        if (!this.audioContext) return;
+        if (!this.audioContext || !this.audioBuffer) return;
 
-        if (this.audioContext.state === 'suspended') {
+        // Always ensure context is running before play
+        if (this.audioContext.state !== 'running') {
             await this.audioContext.resume();
         }
 
@@ -70,7 +81,7 @@ export class AudioEngine {
         this.sourceNode = this.audioContext.createBufferSource();
         this.sourceNode.buffer = this.audioBuffer;
         this.sourceNode.loop = true;
-        this.sourceNode.connect(this.audioContext.destination);
+        this.sourceNode.connect(this.gainNode);
 
         this.sourceNode.start(0, this.pauseOffset);
         this.playStartTime = this.audioContext.currentTime;

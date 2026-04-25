@@ -6,6 +6,7 @@ import * as THREE from 'three';
 
 const REF_WIDTH = 1920;
 const REF_HEIGHT = 1080;
+const IS_MOBILE_PORTRAIT = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
 
 /**
  * Create a canvas texture for the "TOO DEEP" title text
@@ -21,10 +22,11 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, viewportWidth, viewportHeight);
 
-    // Scale by the smaller of width or height ratio so text always fits in view
+    // On mobile portrait, scale by width so text fills the viewport
+    // On desktop/landscape, use min to prevent overflow
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const scale = Math.min(widthScale, heightScale);
+    const scale = IS_MOBILE_PORTRAIT ? widthScale * 1.15 : Math.min(widthScale, heightScale);
 
     // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
@@ -70,7 +72,7 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
 
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const scale = Math.min(widthScale, heightScale);
+    const scale = IS_MOBILE_PORTRAIT ? widthScale * 1.15 : Math.min(widthScale, heightScale);
     const fontSize = Math.round(100 * scale);
     const letterSpacing = 2 * scale;
 
