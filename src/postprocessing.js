@@ -192,25 +192,8 @@ const BloomShader = {
       blurred *= vec3(0.094, 0.325, 0.349);
       vec4 finalColor = mix(color, color + vec4(blurred, 0.0), 0.525);
 
-      #if BLOOM_SECOND_PASS
-      // Second bloom pass — wider, softer
-      vec3 bloom2 = vec3(0.0);
-      float total2 = 0.0;
-      for (int x = -3; x <= 3; x++) {
-        for (int y = -3; y <= 3; y++) {
-          float weight = exp(-0.5 * float(x*x + y*y) / 6.0);
-          vec2 offset = vec2(float(x), float(y)) * 4.0 / uResolution;
-          vec4 s = texture2D(tDiffuse, vUv + offset);
-          vec3 st = pow(s.rgb, vec3(1.0/2.2));
-          st = 1.2 * (st - 0.5) + 0.5;
-          bloom2 += st * smoothstep(0.45, 0.55, luma(st)) * weight;
-          total2 += weight;
-        }
-      }
-      bloom2 /= total2;
-      #else
+      // Lightweight bloom contribution (no second pass)
       vec3 bloom2 = blurred * 0.5;
-      #endif
 
       // Dither (GLSL1 compatible)
       float dither = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
@@ -218,6 +201,11 @@ const BloomShader = {
       float bloomBoost = 0.874 + uAudioHigh * 0.3;
       vec4 result = mix(finalColor, finalColor + vec4(bloom2 * bloomBoost, luma(bloom2)), bloomBoost);
       result.rgb += dither;
+
+      // Exposure lift + gamma correction — compensates for removed 2nd bloom pass
+      // Lands between original brightness and the darker moody vibe
+      result.rgb *= 1.12;
+      result.rgb = pow(result.rgb, vec3(0.94));
 
       gl_FragColor = result;
     }
@@ -793,7 +781,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
       uAudioHigh: { value: 0 },
     },
     vertexShader: BloomShader.vertexShader,
-    fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 2 : 4}\n#define BLOOM_SECOND_PASS ${isMobile ? 0 : 1}\n` + BloomShader.fragmentShader,
+    fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 2 : 4}\n` + BloomShader.fragmentShader,
   });
   bloomPass.uniforms.uResolution.value.set(w, h);
   composer.addPass(bloomPass);
