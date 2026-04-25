@@ -204,8 +204,8 @@ const BloomShader = {
 
       // Exposure lift + gamma correction — compensates for removed 2nd bloom pass
       // Lands between original brightness and the darker moody vibe
-      result.rgb *= 1.12;
-      result.rgb = pow(result.rgb, vec3(0.94));
+      result.rgb *= 1.19;
+      result.rgb = pow(result.rgb, vec3(1.2));
 
       gl_FragColor = result;
     }
