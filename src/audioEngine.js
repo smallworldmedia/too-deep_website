@@ -42,12 +42,12 @@ export class AudioEngine {
         this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
     }
 
-    play() {
+    async play() {
         if (this.isPlaying) return;
         if (!this.audioContext) return;
 
         if (this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
+            await this.audioContext.resume();
         }
 
         if (this.pauseOffset >= this.duration) {
@@ -75,11 +75,11 @@ export class AudioEngine {
         this.isPlaying = false;
     }
 
-    toggle() {
+    async toggle() {
         if (this.isPlaying) {
             this.pause();
         } else {
-            this.play();
+            await this.play();
         }
     }
 

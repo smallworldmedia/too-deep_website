@@ -790,7 +790,7 @@ export function createPostProcessing(renderer, scene, camera) {
     wrapS: THREE.ClampToEdgeWrapping,
     wrapT: THREE.ClampToEdgeWrapping,
     format: THREE.RGBAFormat,
-    type: THREE.FloatType,
+    type: THREE.HalfFloatType,
   });
   const cymaticsRT2 = cymaticsRT1.clone();
 
@@ -829,7 +829,7 @@ export function createPostProcessing(renderer, scene, camera) {
     wrapS: THREE.ClampToEdgeWrapping,
     wrapT: THREE.ClampToEdgeWrapping,
     format: THREE.RGBAFormat,
-    type: THREE.FloatType,
+    type: THREE.HalfFloatType,
   });
   const rippleRT2 = rippleRT1.clone();
 
