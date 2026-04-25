@@ -65,6 +65,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- V3: Segmented LED Fader (Mobile BASS) -->
+                <div class="element-card">
+                    <h3>V3: Segmented LED Mobile BASS</h3>
+                    <div class="mobile-fader-wrapper metal"
+                        style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
+                        <div style="display: flex; gap: 12px; height: 180px; position: relative;">
+                            <div class="fader-led-container" id="fader-leds-3"
+                                style="position: relative; width: 12px; height: 100%;"></div>
+                            <div class="fader-track-container" id="fader-track-3"
+                                style="position: relative; width: 42px; height: 100%;">
+                                <!-- Recessed track slit -->
+                                <div class="fader-slit"
+                                    style="position: absolute; top: 12px; bottom: 12px; left: 50%; width: 10px; margin-left: -5px; background: #080808; border-radius: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);">
+                                </div>
+                                <!-- Thumb -->
+                                <div class="metal-fader" id="fader-handle-3"
+                                    style="position: absolute; top: 156px; left: 0; width: 100%; height: 24px; cursor: ns-resize;">
+                                    <div class="fader-embossed-notch glow-off"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-label glow-off" id="fader-label-3"
+                            style="text-align: center; margin-top: 15px;">BASS</div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -154,16 +181,15 @@
                         <!-- BASS Sub Knob V3 -->
                         <div class="sub-control-wrapper metal v3-wrapper">
                             <div class="knob-cluster" style="position: relative; width: 94px; height: 94px;">
-                                <div class="knob-led-ring-outer" style="position: absolute; inset: 0;">
-                                    <div class="ring-unlit"></div>
-                                    <div class="ring-lit glow-off"></div>
+                                <div class="knob-led-ring-outer" id="bass-ring-3" style="position: absolute; inset: 0;">
                                 </div>
                                 <div class="sub-knob" id="bass-knob-3" data-rotation="210"
                                     style="position: absolute; top: 12px; left: 12px; margin: 0; z-index: 2;">
-                                    <div class="sub-knob-pivot pivot-3">
-                                        <div class="pivot-3-cap">
-                                            <div class="knob-embossed-notch"></div>
-                                        </div>
+                                    <div class="sub-knob-floor-shadow"></div>
+                                    <div class="sub-knob-pivot pivot-3" style="position: absolute; inset: 0;"></div>
+                                    <div class="pivot-3-cap"></div>
+                                    <div class="sub-knob-pivot-notch" style="pointer-events: none;">
+                                        <div class="knob-embossed-notch glow-off"></div>
                                     </div>
                                 </div>
                             </div>

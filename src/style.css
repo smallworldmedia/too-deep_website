@@ -322,14 +322,87 @@ body {
   outline-offset: 2px;
 }
 
-.presave-toggle .arrow-down {
-  transition: transform 1s cubic-bezier(.41, -0.01, .24, 1);
-  opacity: 0.7;
+/* Container structure for cross-fading */
+.toggle-text-wrap,
+.toggle-icon-wrap {
+  display: grid;
+  place-items: center;
 }
 
-/* Arrow rotates up when expanded — uses assembly class */
-#bottom-assembly.expanded .presave-toggle .arrow-down {
-  transform: rotate(180deg);
+.toggle-text-wrap>*,
+.toggle-icon-wrap>* {
+  grid-area: 1 / 1;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.41, -0.01, .24, 1);
+}
+
+/* Default state */
+.toggle-text.close {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.toggle-text.presave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.icon-close {
+  opacity: 0;
+  transform: scale(0.5) rotate(-90deg);
+}
+
+.presave-toggle .arrow-down-wrapper {
+  opacity: 0.7;
+  transform: scale(1) rotate(0deg);
+  width: 12px;
+  height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Expanded state overrides */
+#bottom-assembly.expanded .toggle-text.presave {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+#bottom-assembly.expanded .toggle-text.close {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#bottom-assembly.expanded .presave-toggle .arrow-down-wrapper {
+  opacity: 0;
+  transform: scale(0.5) rotate(90deg);
+}
+
+#bottom-assembly.expanded .icon-close {
+  opacity: 0.7;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Arrow scroll animation details */
+.presave-toggle .arrow-down-scroll {
+  display: flex;
+  flex-direction: column;
+  height: 24px;
+  animation: arrow-scroll 1.5s linear infinite;
+}
+
+@keyframes arrow-scroll {
+  0% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.presave-toggle .arrow-down {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -488,7 +561,7 @@ body {
 .tier2-inner {
   overflow: hidden;
   max-height: 48px;
-  transition: max-height 1.5s cubic-bezier(.57, 0, .24, 1);
+  transition: max-height .85s cubic-bezier(.57, 0, .24, 1);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -508,7 +581,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  padding: 8px 24px 0;
+  padding: 24px 24px 0;
 }
 
 /* Platform pill links */
@@ -586,8 +659,12 @@ body {
     transition-duration: 120ms;
   }
 
-  .presave-toggle .arrow-down {
+  .presave-toggle .arrow-down-wrapper {
     transition-duration: 120ms;
+  }
+
+  .presave-toggle .arrow-down-scroll {
+    animation: none;
   }
 }
 

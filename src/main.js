@@ -276,6 +276,38 @@ function initPanel() {
             setPanel(false);
         }
     });
+
+    // Scroll / Swipe to open/close
+    window.addEventListener('wheel', (e) => {
+        // Ignore if scrolling on the knob to allow sub gain adjustment
+        if (e.target.closest('.sub-knob')) return;
+
+        if (e.deltaY > 10 && !isPanelOpen) {
+            setPanel(true);
+        } else if (e.deltaY < -10 && isPanelOpen) {
+            setPanel(false);
+        }
+    }, { passive: true });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.sub-knob')) return;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+        if (e.target.closest('.sub-knob')) return;
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+
+        if (deltaY > 30 && !isPanelOpen) {
+            setPanel(true);
+            touchStartY = touchY; // reset to avoid multiple triggers
+        } else if (deltaY < -30 && isPanelOpen) {
+            setPanel(false);
+            touchStartY = touchY;
+        }
+    }, { passive: true });
 }
 
 // ================================================================
