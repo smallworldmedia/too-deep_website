@@ -377,14 +377,8 @@ function onPointerMove(e) {
 }
 
 window.addEventListener('mousemove', onPointerMove);
-window.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    onPointerMove(e);
-}, { passive: false });
-window.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    onPointerMove(e);
-}, { passive: false });
+window.addEventListener('touchmove', onPointerMove, { passive: true });
+window.addEventListener('touchstart', onPointerMove, { passive: true });
 
 // ================================================================
 // RESIZE
