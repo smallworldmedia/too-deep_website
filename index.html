@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap"
+    rel="stylesheet" />
   <style>
     @font-face {
       font-family: 'Aspekta-450';
@@ -25,20 +27,41 @@
 <body>
   <canvas id="canvas"></canvas>
 
-  <!-- Release info — floating, top center -->
-  <div id="release-info">
-    <div class="release-available">Available</div>
-    <div class="release-date">MAY 1, 2026</div>
-    <div class="countdown-badge">
-      <span class="countdown" id="countdown"></span>
-    </div>
-  </div>
+  <!-- Share button — viewport top-right -->
+  <button id="share-btn" aria-label="Share this page">
+    <svg class="share-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" y1="2" x2="12" y2="15" />
+    </svg>
+    <svg class="close-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+    <span class="share-label">Share</span>
+  </button>
 
   <!-- Share toast -->
   <div id="share-toast" class="hidden">Copied</div>
 
   <!-- Dim + blur backdrop -->
   <div id="panel-backdrop"></div>
+
+  <!-- Pre-save full-screen overlay -->
+  <div id="presave-overlay">
+    <div class="overlay-content">
+      <p class="presave-prompt">Pre-save to your music library to be automatically added on Friday, May 1st.</p>
+      <div class="platform-buttons" id="platform-buttons"></div>
+    </div>
+  </div>
+
+  <!-- SWM credit — fixed bottom-left -->
+  <a href="https://smallworld.media" target="_blank" rel="noopener noreferrer" class="swm-credit">
+    <span class="swm-credit-prefix">site by</span>
+    <img src="/logos/Small World Media Logo Inline Blue-01.svg" alt="Small World Media" class="swm-credit-logo" />
+  </a>
 
   <!-- Bottom assembly — controls + presave + links panel -->
   <div id="bottom-assembly">
@@ -59,6 +82,7 @@
         <!-- Pre-Save Button (Standalone Horizontal) -->
         <div class="presave-panel metal">
           <button class="tape-btn presave" id="tape-presave" aria-expanded="false" aria-controls="panel-tier-2">
+            <div class="presave-frosted-glass"></div>
             <span class="presave-content">
               <svg class="presave-heart" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path
@@ -71,9 +95,9 @@
 
         <!-- BASS Sub Knob (Desktop) -->
         <div class="sub-control-wrapper metal v3-wrapper desktop-only">
-          <div class="knob-cluster" style="position: relative; width: 94px; height: 94px;">
+          <div class="knob-cluster" style="position: relative; width: 80px; height: 80px;">
             <div class="knob-led-ring-outer" id="bass-ring" style="position: absolute; inset: 0;"></div>
-            <div class="sub-knob" id="bass-knob" data-rotation="210"
+            <div class="sub-knob" id="bass-knob" data-rotation="360"
               style="position: absolute; top: 12px; left: 12px; margin: 0; z-index: 2;">
               <div class="sub-knob-floor-shadow"></div>
               <div class="sub-knob-pivot pivot-3" style="position: absolute; inset: 0;"></div>
@@ -87,8 +111,7 @@
         </div>
 
         <!-- BASS Fader (Mobile) -->
-        <div class="mobile-fader-wrapper metal mobile-only"
-          style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
+        <div class="mobile-fader-wrapper mobile-only">
           <div style="display: flex; gap: 12px; height: 180px; position: relative;">
             <div class="fader-led-container" id="fader-leds" style="position: relative; width: 12px; height: 100%;">
             </div>
@@ -107,25 +130,7 @@
       </div>
     </div>
 
-    <!-- Links panel -->
-    <div id="bottom-panel">
-      <button id="share-btn" aria-label="Share this page">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
-          <polyline points="16 6 12 2 8 6" />
-          <line x1="12" y1="2" x2="12" y2="15" />
-        </svg>
-      </button>
 
-      <div class="panel-tier2" id="panel-tier-2">
-        <div class="tier2-inner">
-          <div class="platform-buttons" id="platform-buttons"></div>
-          <a href="https://smallworld.media" target="_blank" rel="noopener noreferrer" class="swm-credit">site by small
-            world media</a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script type="module" src="/src/main.js"></script>

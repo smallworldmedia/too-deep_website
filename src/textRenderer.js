@@ -119,3 +119,77 @@ function drawTextWithSpacing(ctx, text, x, y, spacing) {
         currentX += charWidth + spacing;
     }
 }
+
+/**
+ * Create a canvas texture for the countdown timer
+ * Positioned at the top of the viewport to match the old DOM placement
+ * Returns { texture, canvas, ctx } so we can re-draw each second
+ */
+export function createCountdownTexture(viewportWidth, viewportHeight) {
+    const canvas = document.createElement('canvas');
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = viewportWidth * dpr;
+    canvas.height = viewportHeight * dpr;
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    return { texture, canvas, ctx };
+}
+
+/**
+ * Draw the release date text — no countdown timer
+ * Renders "RELEASING MAY 1, 2026" prominently at the top of the viewport
+ */
+export function updateCountdownTexture(canvas, ctx, viewportWidth, viewportHeight) {
+    const dpr = Math.min(window.devicePixelRatio, 2);
+
+    // Resize canvas if viewport changed
+    if (canvas.width !== viewportWidth * dpr || canvas.height !== viewportHeight * dpr) {
+        canvas.width = viewportWidth * dpr;
+        canvas.height = viewportHeight * dpr;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+    }
+
+    ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+
+    // Dynamic mobile detection — rechecked every frame
+    const isMobile = viewportWidth <= 768 && viewportHeight > viewportWidth;
+
+    // Scale based on viewport width
+    const widthScale = viewportWidth / REF_WIDTH;
+    const scale = isMobile
+        ? Math.max(widthScale * 1.8, 0.55)
+        : Math.max(widthScale, 0.5);
+
+    // "RELEASING MAY 1, 2026" — large and prominent
+    const releaseFontSize = Math.max(Math.round(48 * scale), 24);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `700 ${releaseFontSize}px "Aspekta-450", sans-serif`;
+    ctx.letterSpacing = `${Math.round(1.2 * scale)}px`;
+    ctx.fillStyle = 'rgba(196, 241, 251, 0.9)';
+    const centerX = viewportWidth / 2;
+
+    // Calculate top of "TOO" text to center release date between viewport top and TOO
+    const titleWidthScale = viewportWidth / REF_WIDTH;
+    const titleHeightScale = viewportHeight / REF_HEIGHT;
+    const titleScale = isMobile
+        ? Math.max(titleWidthScale * 1.22, 0.42)
+        : Math.min(titleWidthScale, titleHeightScale);
+    const titleFontSize = Math.round(600 * titleScale);
+    const titleCenterY = viewportHeight / 2 + 45 * titleScale;
+    const tooY = titleCenterY + (-270 * titleScale);
+    const tooTopEdge = tooY - titleFontSize / 2;
+
+    // Center between viewport top (0) and the top edge of TOO
+    const topY = Math.round(tooTopEdge / 2);
+    ctx.fillText('RELEASING MAY 1, 2026', centerX, topY);
+}
+

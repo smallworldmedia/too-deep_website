@@ -19,6 +19,12 @@ export function createScene(renderer) {
     const title = createTitleTexture(w, h);
     const artist = createArtistTexture(w, h);
 
+    // Placeholder 1x1 transparent texture for countdown (linked in main.js after init)
+    const placeholderCanvas = document.createElement('canvas');
+    placeholderCanvas.width = 1;
+    placeholderCanvas.height = 1;
+    const placeholderTexture = new THREE.CanvasTexture(placeholderCanvas);
+
     // Fullscreen quad material
     const uniforms = {
         uTime: { value: 0 },
@@ -26,6 +32,7 @@ export function createScene(renderer) {
         uMousePos: { value: new THREE.Vector2(0.5, 0.5) },
         uTitleTexture: { value: title.texture },
         uArtistTexture: { value: artist.texture },
+        uCountdownTexture: { value: placeholderTexture },
     };
 
     const material = new THREE.ShaderMaterial({
@@ -53,6 +60,7 @@ export function createScene(renderer) {
         uniforms.uArtistTexture.value.dispose();
         uniforms.uTitleTexture.value = newTitle.texture;
         uniforms.uArtistTexture.value = newArtist.texture;
+        // Note: countdown texture resize is handled in main.js updateCountdown()
     }
 
     return { scene, camera, uniforms, mesh, material, onResize };

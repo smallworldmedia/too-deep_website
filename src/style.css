@@ -26,77 +26,7 @@ body {
   touch-action: none;
 }
 
-/* ========================================
-   RELEASE INFO — floating, top center
-   ======================================== */
-#release-info {
-  position: fixed;
-  top: calc(16px + env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  text-align: center;
-  background: rgba(8, 20, 40, 0.5);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(114, 221, 249, 0.15);
-  border-radius: 20px;
-  padding: 12px 24px;
-  pointer-events: none;
-}
 
-#release-info .release-available {
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(114, 221, 249, 0.45);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Date — Italiana */
-#release-info .release-date {
-  font-family: 'Italiana', serif;
-  font-size: 18px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(114, 221, 249, 0.6);
-  margin-top: 2px;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Countdown badge — fixed width, stroked pill */
-.countdown-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 8px;
-  width: 200px;
-  padding: 5px 0;
-  border: 1px solid rgba(114, 221, 249, 0.3);
-  border-radius: 20px;
-  pointer-events: auto;
-}
-
-/* Countdown — Aspekta */
-.countdown-badge .countdown {
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 1.5px;
-  color: rgba(114, 221, 249, 0.85);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.countdown-badge .countdown.out-now {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(114, 221, 249, 0.5);
-}
 
 /* ========================================
    SHARE TOAST
@@ -172,16 +102,17 @@ body {
 .controls-group {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .controls-row {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: center;
-  gap: 20px;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 /* =========================================
@@ -195,19 +126,22 @@ body {
   display: inline-flex;
   gap: 4px;
   padding: 12px 6px 2px 6px;
+  overflow: visible;
+  position: relative;
   border-radius: 8px;
   border: 1px solid #111;
 }
 
 .tape-deck-panel.metal {
-  background: #050505;
-  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: rgba(10, 30, 60, 0.55);
+  border-color: rgba(114, 221, 249, 0.15);
+  box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.08);
 }
 
 .tape-btn {
   position: relative;
-  width: 66px;
-  height: 70px;
+  width: 52px;
+  height: 56px;
   border: none;
   padding: 0;
   cursor: pointer;
@@ -221,7 +155,9 @@ body {
   transition: transform 0.18s cubic-bezier(0.24, 1.05, 0.48, 1.05),
     box-shadow 0.18s cubic-bezier(0.24, 1.05, 0.48, 1.05),
     background 0.15s ease-out;
-  transform: translateY(-16px);
+  transform: translateY(-12px);
+  z-index: 2;
+  pointer-events: auto;
 }
 
 .tape-btn.pressed {
@@ -231,28 +167,27 @@ body {
     background 0.06s ease-in;
 }
 
-/* Metal material */
+/* Metal material — cyan-tinted to match share/overlay pills */
 .metal .tape-btn {
-  background: linear-gradient(to bottom, #8a8a8a 0%, #767676 100%);
+  background: linear-gradient(to bottom, rgba(30, 70, 110, 0.85) 0%, rgba(15, 35, 60, 0.9) 100%);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.7),
-    inset 1px 0 2px rgba(255, 255, 255, 0.2),
-    inset -1px 0 2px rgba(0, 0, 0, 0.2),
-    inset 0 -2px 2px rgba(0, 0, 0, 0.6),
-    0 1px 0 rgba(0, 0, 0, 0.5),
-    0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050,
-    0 5px 0 #4c4c4c, 0 6px 0 #484848, 0 7px 0 #444444, 0 8px 0 #404040,
-    0 9px 0 #3c3c3c, 0 10px 0 #383838, 0 11px 0 #343434, 0 12px 0 #303030,
-    0 13px 0 #2c2c2c, 0 14px 0 #282828, 0 15px 0 #242424, 0 16px 0 #202020,
-    0 20px 10px rgba(0, 0, 0, 0.8);
+    inset 0 1px 1px rgba(114, 221, 249, 0.3),
+    inset 1px 0 2px rgba(114, 221, 249, 0.12),
+    inset -1px 0 2px rgba(0, 0, 0, 0.3),
+    inset 0 -2px 2px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 2px 0 rgba(12, 25, 45, 0.9), 0 3px 0 rgba(10, 22, 40, 0.9), 0 4px 0 rgba(8, 18, 35, 0.9),
+    0 5px 0 rgba(6, 15, 30, 0.9), 0 6px 0 rgba(5, 12, 25, 0.9), 0 7px 0 rgba(4, 10, 22, 0.9), 0 8px 0 rgba(3, 8, 18, 0.9),
+    0 9px 0 rgba(2, 6, 14, 0.9), 0 10px 0 rgba(1, 4, 10, 0.9), 0 11px 0 rgba(0, 2, 6, 0.9), 0 12px 0 rgba(0, 0, 3, 0.9),
+    0 15px 8px rgba(0, 0, 0, 0.7);
 }
 
 .metal .tape-btn.pressed {
-  background: linear-gradient(to bottom, #767676 0%, #606060 100%);
+  background: linear-gradient(to bottom, rgba(20, 45, 75, 0.85) 0%, rgba(10, 25, 45, 0.9) 100%);
   box-shadow:
-    inset 0 12px 10px rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+    inset 0 12px 10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(114, 221, 249, 0.12),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Noise texture overlay */
@@ -277,11 +212,11 @@ body {
 /* LED bar */
 .tape-led {
   position: absolute;
-  top: 8px;
-  width: 22px;
-  height: 4px;
+  top: 6px;
+  width: 18px;
+  height: 3px;
   border-radius: 2px;
-  background: #661111;
+  background: #003344;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
   transition: all 0.2s;
 }
@@ -292,34 +227,34 @@ body {
 
 @keyframes ledPulseRed {
   0% {
-    background: #661111;
+    background: #003344;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
   }
 
   100% {
-    background: #ff4444;
-    box-shadow: 0 0 6px #ff4444, inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    background: #006A92;
+    box-shadow: 0 0 6px #006A92, inset 0 1px 1px rgba(255, 255, 255, 0.5);
   }
 }
 
 .tape-btn.play.pressed .tape-led {
   animation: none;
-  background: #22ff55;
-  box-shadow: 0 0 8px #22ff55, inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  background: #006A92;
+  box-shadow: 0 0 8px #006A92, inset 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 /* Icon styling */
 .tape-btn .icon {
-  margin-top: 12px;
-  font-size: 24px;
-  color: #4a4a4a;
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+  margin-top: 8px;
+  font-size: 18px;
+  color: rgba(114, 221, 249, 0.4);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.12);
   transition: all 0.2s;
 }
 
 .tape-btn.pressed .icon {
-  color: #e0e0e0;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  color: #c4f1fb;
+  text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
 }
 
 /* ---------------------------------
@@ -328,23 +263,77 @@ body {
 .presave-panel {
   display: inline-flex;
   padding: 12px 6px 2px 6px;
+  overflow: visible;
   border-radius: 8px;
   border: 1px solid #111;
 }
 
 .presave-panel.metal {
-  background: #050505;
-  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+  background: rgba(10, 30, 60, 0.55);
+  border-color: rgba(114, 221, 249, 0.15);
+  box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.08);
 }
 
 .presave-panel .tape-btn.presave {
   width: auto;
-  min-width: 120px;
+  min-width: 100px;
   height: fill;
-  padding: 0 22px;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  background: transparent;
+  border-radius: 10px;
+  border: none;
+  border-top: 1px solid rgba(255, 220, 230, 0.6);
+  /* No extrusion here — lives on frosted glass so it flickers */
+  box-shadow: none;
+  overflow: visible;
+}
+
+.presave-frosted-glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+  backdrop-filter: blur(8px);
+  background: radial-gradient(circle at center, rgba(245, 115, 135, 0.95) 0%, rgba(230, 90, 115, 0.88) 55%, rgba(220, 85, 110, 0.85) 100%);
+  /* Extrusion lives here so it flickers with the face */
+  box-shadow:
+    /* Inner glow */
+    inset 0 0 35px rgba(255, 70, 100, 0.7),
+    inset 0 8px 15px rgba(255, 255, 255, 0.25),
+    /* Gradual extrusion spread across full 12px depth */
+    0 2px 0 rgba(220, 85, 110, 0.95),
+    0 3px 0 rgba(210, 75, 100, 0.92),
+    0 4px 0 rgba(195, 65, 90, 0.88),
+    0 5px 0 rgba(180, 58, 80, 0.85),
+    0 6px 0 rgba(165, 50, 72, 0.82),
+    0 7px 0 rgba(150, 44, 64, 0.78),
+    0 8px 0 rgba(135, 38, 56, 0.74),
+    0 9px 0 rgba(120, 32, 50, 0.70),
+    0 10px 0 rgba(105, 28, 44, 0.66),
+    0 11px 0 rgba(90, 24, 38, 0.62),
+    0 12px 0 rgba(75, 18, 32, 0.58),
+    /* Soft floor shadow */
+    0 14px 10px rgba(30, 4, 12, 0.7),
+    /* Outward bloom */
+    0 0 50px rgba(240, 80, 110, 0.5);
+}
+
+.tape-btn.presave.pressed {
+  box-shadow: none;
+}
+
+.tape-btn.presave.pressed .presave-frosted-glass {
+  background: radial-gradient(circle at center, rgba(245, 115, 135, 0.95) 0%, rgba(230, 90, 115, 0.88) 55%, rgba(220, 85, 110, 0.85) 100%);
+  box-shadow:
+    inset 0 0 50px rgba(255, 100, 130, 0.9),
+    inset 0 8px 15px rgba(255, 255, 255, 0.5),
+    /* Collapsed extrusion when pressed */
+    0 1px 0 rgba(180, 55, 75, 0.6),
+    0 0 60px rgba(250, 100, 130, 0.8);
+  filter: brightness(1.2) contrast(1.15);
 }
 
 .presave-content {
@@ -360,59 +349,98 @@ body {
 }
 
 .presave-text {
+  font-family: 'Aspekta-450', sans-serif;
   font-size: 1.3em;
   font-weight: 700;
   letter-spacing: .2px;
   text-transform: uppercase;
 }
 
-.tape-btn.presave:not(.pressed) .presave-content {
-  animation: presavePulse 1.4s infinite alternate ease-in-out;
+/* Steady opaque text and icon for all states */
+.tape-btn.presave .presave-text {
+  color: #f9c9d1;
+  text-shadow: 0 0 20px rgb(233, 207, 211), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.tape-btn.presave:not(.pressed) .presave-heart {
-  fill: #12080c;
-  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.8)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
-  animation: heartPulse 1.4s infinite alternate ease-in-out;
+.tape-btn.presave .presave-heart {
+  fill: #f9c9d1;
+  filter: drop-shadow(0 0 20px rgb(233, 207, 211)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
 }
 
-.tape-btn.presave:not(.pressed) .presave-text {
-  color: #12080c;
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.8);
-  animation: textPulse 1.4s infinite alternate ease-in-out;
+/* Flicker animation targeting frosted glass when unpressed */
+.tape-btn.presave:not(.pressed) .presave-frosted-glass {
+  animation: presavePulse 2.5s infinite linear;
 }
 
 @keyframes presavePulse {
   0% {
-    opacity: 0.8;
+    opacity: 0.85;
+    filter: brightness(0.95);
   }
 
-  100% {
+  2% {
     opacity: 1;
+    filter: brightness(1.1) contrast(1.1);
   }
-}
 
-@keyframes heartPulse {
-  0% {
-    fill: #373737;
-    filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.1)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6));
+  4% {
+    opacity: 0.85;
+    filter: brightness(0.9);
+  }
+
+  8% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+
+  9% {
+    opacity: 0.85;
+    filter: brightness(0.9);
+  }
+
+  12% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+
+  40% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  42% {
+    opacity: 0.85;
+    filter: brightness(0.9);
+  }
+
+  44% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+
+  75% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  77% {
+    opacity: 0.7;
+    filter: brightness(0.8);
+  }
+
+  78% {
+    opacity: 1;
+    filter: brightness(1.08) contrast(1.2);
+  }
+
+  98% {
+    opacity: 1;
+    filter: brightness(1.1);
   }
 
   100% {
-    fill: #df72a6;
-    filter: drop-shadow(0 0 6px rgba(232, 67, 147, 0.6)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.4));
-  }
-}
-
-@keyframes textPulse {
-  0% {
-    color: #373737;
-    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.2), 0 1px 1px rgba(255, 255, 255, 0.1);
-  }
-
-  100% {
-    color: #df72a6;
-    text-shadow: 0 0 6px rgba(232, 67, 147, 0.6), 0 -1px 1px rgba(0, 0, 0, 0.4);
+    opacity: 0.85;
+    filter: brightness(0.9);
   }
 }
 
@@ -424,8 +452,8 @@ body {
 
 .tape-btn.presave.pressed .presave-text {
   animation: none;
-  color: #ff6bb5;
-  text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  color: #f1acbd;
+  text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.4);
 }
 
 /* =========================================
@@ -439,20 +467,20 @@ body {
 }
 
 .sub-knob {
-  width: 70px;
-  height: 70px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   position: relative;
   cursor: pointer;
-  background: linear-gradient(135deg, #a0a0a0 0%, #767676 40%, #606060 100%);
+  background: linear-gradient(135deg, #374665 0%, #1f293b 40%, #111824 100%);
   box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.7),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(0, 0, 0, 0.5),
-    0 2px 0 #585858, 0 3px 0 #545454, 0 4px 0 #505050, 0 5px 0 #4c4c4c,
-    0 6px 0 #464646, 0 7px 0 #404040, 0 8px 0 #3a3a3a, 0 9px 0 #323232,
-    0 10px 0 #2a2a2a, 0 11px 0 #222222, 0 12px 0 #1a1a1a,
-    0 18px 15px rgba(0, 0, 0, 0.8);
+    inset 0 1px 2px rgba(114, 221, 249, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(0, 0, 0, 0.7),
+    0 2px 0 #18202e, 0 3px 0 #161d2a, 0 4px 0 #141a26, 0 5px 0 #111722,
+    0 6px 0 #0f141d, 0 7px 0 #0d1119, 0 8px 0 #0b0e15, 0 9px 0 #080b11,
+    0 10px 0 #06080c, 0 11px 0 #040508, 0 12px 0 #020304,
+    0 18px 15px rgba(0, 0, 0, 0.9);
 }
 
 .sub-knob::before {
@@ -492,7 +520,7 @@ body {
   height: 100%;
   border-radius: 50%;
   position: relative;
-  background: repeating-conic-gradient(from 0deg, #333 0deg, #666 1.8deg, #888 5deg, #333 5.4deg);
+  background: repeating-conic-gradient(from 0deg, rgba(15, 30, 55, 0.9) 0deg, rgba(30, 55, 85, 0.9) 1.8deg, rgba(50, 85, 120, 0.8) 5deg, rgba(15, 30, 55, 0.9) 5.4deg);
 }
 
 .pivot-3-cap {
@@ -500,14 +528,14 @@ body {
   inset: 4px;
   border-radius: 50%;
   transform: translateY(-8px);
-  background: linear-gradient(135deg, #8a8a8a 0%, #555 100%);
+  background: linear-gradient(135deg, rgba(35, 70, 105, 0.85) 0%, rgba(15, 30, 55, 0.9) 100%);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.52),
-    0 1px 0 rgba(0, 0, 0, 0.6), 0 2px 0 #505050, 0 3px 0 #484848,
-    0 4px 0 #404040, 0 5px 0 #383838, 0 6px 0 #303030,
-    0 7px 0 #282828, 0 8px 0 #202020,
-    0 12px 10px rgba(0, 0, 0, 0.9);
+    inset 0 1px 1px rgba(114, 221, 249, 0.5),
+    inset 0 -2px 1px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(0, 0, 0, 0.6), 0 2px 0 rgba(12, 25, 45, 0.9), 0 3px 0 rgba(10, 22, 40, 0.9),
+    0 4px 0 rgba(8, 18, 35, 0.9), 0 2px 0 rgba(6, 15, 30, 0.9), 0 6px 0 rgba(4, 12, 25, 0.9),
+    0 7px 0 rgba(3, 9, 20, 0.9), 0 8px 0 rgba(2, 6, 14, 0.9),
+    0 12px 10px rgba(0, 0, 0, 0.7);
 }
 
 .pivot-3-cap::after {
@@ -517,14 +545,14 @@ body {
   border-radius: 50%;
   background-image: var(--noise-texture);
   mix-blend-mode: overlay;
-  opacity: 0.25;
+  opacity: 0.35;
   pointer-events: none;
 }
 
 .sub-knob-pivot-notch {
   position: absolute;
-  width: 62px;
-  height: 62px;
+  width: 48px;
+  height: 48px;
   top: -4px;
   left: 4px;
   border-radius: 50%;
@@ -545,13 +573,13 @@ body {
 }
 
 .knob-embossed-notch.glow-on {
-  background: #00ffd5;
-  box-shadow: 0 0 8px rgba(0, 229, 255, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  background: #006A92;
+  box-shadow: 0 0 8px rgba(0, 106, 146, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .v3-wrapper {
   position: relative;
-  width: 94px;
+  width: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -585,31 +613,30 @@ body {
 
 /* Hardware label */
 .sub-label {
-  font-size: 14px;
+  font-family: 'Aspekta-450', sans-serif;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.2px;
-  color: #4a4a4a;
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  color: rgba(114, 221, 249, 0.35);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.4), 0 1px 1px rgba(114, 221, 249, 0.08);
   transition: all 0.2s;
 }
 
 .sub-label.glow-on {
-  color: #e0e0e0;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  color: #c4f1fb;
+  text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
 }
 
 /* =========================================
    Mobile BASS Fader — Segmented LED
 ========================================= */
 .mobile-fader-wrapper {
-  padding: 12px 6px 2px 6px;
-  border-radius: 8px;
-  border: 1px solid #111;
-}
-
-.mobile-fader-wrapper.metal {
-  background: #050505;
-  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: none;
 }
 
 .fader-led-notch {
@@ -633,13 +660,13 @@ body {
 }
 
 .metal-fader {
-  background: linear-gradient(135deg, #6c6c6c 0%, #3e3e3e 100%);
+  background: linear-gradient(135deg, rgba(25, 55, 85, 0.85) 0%, rgba(12, 28, 50, 0.9) 100%);
   border-radius: 4px;
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.4),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
-    0 2px 2px rgba(0, 0, 0, 0.8),
-    0 6px 8px rgba(0, 0, 0, 0.6);
+    inset 0 1px 1px rgba(114, 221, 249, 0.2),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 2px rgba(0, 0, 0, 0.7),
+    0 6px 8px rgba(0, 0, 0, 0.5);
   position: relative;
   display: flex;
   justify-content: center;
@@ -669,13 +696,13 @@ body {
 }
 
 .fader-embossed-notch.glow-on {
-  background: #00ffd5;
-  box-shadow: 0 0 8px rgba(0, 229, 255, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  background: #006A92;
+  box-shadow: 0 0 8px rgba(0, 106, 146, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 /* Responsive: desktop knob / mobile fader */
 .mobile-only {
-  display: none;
+  display: none !important;
 }
 
 .desktop-only {
@@ -683,30 +710,16 @@ body {
 }
 
 /* ========================================
-   BOTTOM PANEL — links only
-   ======================================== */
-#bottom-panel {
-  width: 100%;
-  background: rgba(8, 20, 40, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(114, 221, 249, 0.15);
-  border-radius: 24px;
-  overflow: hidden;
-  position: relative;
-}
-
-/* ========================================
-   SHARE BUTTON — inside panel, top-right
+   SHARE BUTTON — viewport top-right, expand on hover
    ======================================== */
 #share-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  position: fixed;
+  top: calc(16px + env(safe-area-inset-top));
+  right: 16px;
+  z-index: 100;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 18px;
   border: 1px solid rgba(114, 221, 249, 0.3);
   background: rgba(10, 40, 80, 0.35);
   backdrop-filter: blur(12px);
@@ -716,16 +729,91 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  gap: 0;
+  padding: 0 11px;
+  overflow: hidden;
   outline: none;
   user-select: none;
   -webkit-user-select: none;
+  /* Snappy transition with smooth falloff — no overshoot */
+  transition:
+    top 0.45s cubic-bezier(0.22, 0.9, 0.36, 1),
+    right 0.45s cubic-bezier(0.22, 0.9, 0.36, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    gap 0.3s ease;
+}
+
+/* Icon swap logic */
+#share-btn .share-icon {
+  flex-shrink: 0;
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+
+#share-btn .close-icon {
+  position: absolute;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+  transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.share-label {
+  font-family: 'Aspekta-450', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease 0.05s,
+    margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 0;
 }
 
 #share-btn:hover {
   background: rgba(10, 40, 80, 0.5);
   border-color: rgba(114, 221, 249, 0.5);
   box-shadow: 0 0 16px rgba(114, 221, 249, 0.15);
+  gap: 6px;
+}
+
+#share-btn:hover .share-label {
+  max-width: 60px;
+  opacity: 1;
+  margin-left: 4px;
+}
+
+/* Close mode — when overlay is open */
+#share-btn.close-mode {
+  /* Position near top-right of overlay content area */
+  top: calc(50vh - 220px);
+  right: calc(50vw - 280px);
+  border-color: rgba(114, 221, 249, 0.5);
+  background: rgba(10, 40, 80, 0.55);
+}
+
+#share-btn.close-mode .share-icon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+#share-btn.close-mode .close-icon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+#share-btn.close-mode .share-label {
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+}
+
+#share-btn.close-mode:hover {
+  border-color: rgba(114, 221, 249, 0.7);
+  box-shadow: 0 0 20px rgba(114, 221, 249, 0.25);
 }
 
 #share-btn:focus-visible {
@@ -734,55 +822,86 @@ body {
 }
 
 /* ========================================
-   TIER 2 — platform links
+   PRE-SAVE OVERLAY — full-screen centered
    ======================================== */
-.panel-tier2 {
-  position: relative;
-}
-
-/* Gradient overlay for peek darkening — fades out smoothly */
-.panel-tier2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 52px;
-  background: linear-gradient(to bottom, transparent, rgba(8, 20, 40, 0.95));
-  pointer-events: none;
-  z-index: 2;
-  opacity: 1;
-  transition: opacity 1.5s cubic-bezier(.57, 0, .24, 1);
-}
-
-#bottom-assembly.expanded .panel-tier2::after {
+#presave-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
 }
 
-.tier2-inner {
-  overflow: hidden;
-  max-height: 48px;
-  transition: max-height .85s cubic-bezier(.57, 0, .24, 1);
+#presave-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-.tier2-inner::-webkit-scrollbar {
+.overlay-content::-webkit-scrollbar {
   display: none;
 }
 
-#bottom-assembly.expanded .tier2-inner {
-  overflow-y: auto;
+/* Pre-save prompt text — above platform buttons */
+.presave-prompt {
+  font-family: 'Aspekta-450', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(114, 221, 249, 0.45);
+  text-align: center;
+  max-width: 360px;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+  opacity: 0;
+  transform: translateY(12px);
 }
 
-/* Desktop: horizontal wrap */
+#presave-overlay.active .presave-prompt {
+  animation: presavePromptIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 40ms;
+}
+
+@keyframes presavePromptIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    color: rgba(114, 221, 249, 0.25);
+    text-shadow: none;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    color: #c4f1fb;
+    text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Platform buttons — inside overlay */
 .platform-buttons {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  padding: 24px 24px 0;
+  gap: 12px;
+  padding: 0;
 }
 
 /* Platform pill links */
@@ -790,28 +909,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 14px;
-  border-radius: 19px;
-  background: rgba(10, 40, 80, 0.35);
+  height: 52px;
+  padding: 0 20px;
+  border-radius: 24px;
+  background: rgba(10, 40, 80, 0.45);
   border: 1px solid rgba(114, 221, 249, 0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: rgba(114, 221, 249, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   text-decoration: none;
-  font-family: 'Aspekta-450', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1px;
   transition: all 0.25s ease;
   white-space: nowrap;
   user-select: none;
+  /* Stagger animation — starts hidden, animated in when overlay opens */
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+#presave-overlay.active .platform-pill {
+  animation: overlayPillIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 60ms + 80ms);
+}
+
+@keyframes overlayPillIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .platform-pill:hover {
   border-color: rgba(114, 221, 249, 0.5);
-  background: rgba(10, 40, 80, 0.5);
-  box-shadow: 0 0 12px rgba(114, 221, 249, 0.1);
+  background: rgba(10, 40, 80, 0.6);
+  box-shadow: 0 0 16px rgba(114, 221, 249, 0.12);
 }
 
 .platform-pill:focus-visible {
@@ -819,28 +953,80 @@ body {
   outline-offset: 2px;
 }
 
-.platform-pill svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
+/* Platform logo images */
+.platform-logo {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
 }
 
-/* SWM credit */
+.platform-pill:hover .platform-logo {
+  opacity: 1;
+}
+
+/* Per-logo optical sizing — balance visual weight */
+.platform-pill[data-slug="spotify"] .platform-logo {
+  height: 26px;
+}
+
+.platform-pill[data-slug="applemusic"] .platform-logo {
+  height: 22px;
+}
+
+.platform-pill[data-slug="deezer"] .platform-logo {
+  height: 26px;
+}
+
+.platform-pill[data-slug="amazonmusic"] .platform-logo {
+  height: 24px;
+}
+
+.platform-pill[data-slug="tidal"] .platform-logo {
+  height: 12px;
+}
+
+.platform-pill[data-slug="soundcloud"] .platform-logo {
+  height: 22px;
+}
+
+.platform-pill[data-slug="audiomack"] .platform-logo {
+  height: 14px;
+}
+
+/* SWM credit — fixed bottom-left, always visible */
 .swm-credit {
-  display: block;
-  text-align: center;
-  padding: 10px 24px calc(8px + env(safe-area-inset-bottom));
+  position: fixed;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  left: 16px;
+  z-index: 35;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  opacity: 0.4;
+  display: flex;
+  align-items: center;
+}
+
+.swm-credit-prefix {
   font-family: 'Aspekta-450', sans-serif;
   font-size: 9px;
   letter-spacing: 1.5px;
-  color: rgba(114, 221, 249, 0.3);
-  text-decoration: none;
-  transition: color 0.2s ease;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 1);
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+.swm-credit-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1) opacity(1);
 }
 
 .swm-credit:hover {
-  color: rgba(114, 221, 249, 0.6);
-  text-decoration: underline;
+  opacity: 0.7;
 }
 
 /* ========================================
@@ -855,9 +1041,7 @@ body {
     animation: none;
   }
 
-  .tape-btn.presave:not(.pressed) .presave-content,
-  .tape-btn.presave:not(.pressed) .presave-heart,
-  .tape-btn.presave:not(.pressed) .presave-text {
+  .tape-btn.presave:not(.pressed) .presave-frosted-glass {
     animation: none;
   }
 
@@ -887,10 +1071,11 @@ body {
     align-items: stretch;
     max-width: 320px;
     margin: 0 auto;
+    gap: 8px;
   }
 
   .platform-pill {
-    height: 42px;
+    height: 44px;
   }
 
   .controls-row {
@@ -900,24 +1085,63 @@ body {
 
 @media (max-width: 480px) {
   #bottom-assembly {
-    width: 90%;
+    width: 100%;
+    max-width: 100%;
+    bottom: 0;
+    padding: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+  }
+
+  .controls-group {
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 16px calc(20px + env(safe-area-inset-bottom)) 16px;
+  }
+
+  .controls-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    gap: 0;
+  }
+
+  /* Play/Pause — bottom-left */
+  .tape-deck-panel {
+    order: 1;
+  }
+
+  /* Pre-save — bottom-center */
+  .presave-panel {
+    order: 2;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+  }
+
+  /* Fader — bottom-right, aligned with share btn right edge */
+  .mobile-fader-wrapper {
+    order: 3;
+    margin-right: 0;
   }
 
   .platform-pill {
-    font-size: 10px;
     height: 38px;
+    padding: 0 16px;
   }
 
-  .platform-pill svg {
-    width: 12px;
-    height: 12px;
+  .platform-pill .platform-logo {
+    height: 16px;
   }
 
-  .countdown-badge {
-    width: 180px;
-  }
-
-  #release-info {
-    padding: 10px 18px;
+  #share-btn.close-mode {
+    top: calc(16px + env(safe-area-inset-top));
+    right: 16px;
   }
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D UI Components (Three.js WebGPU)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #111;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: white;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+        }
+
+        .instructions {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ui-overlay">
+        <h1>3D Interactive Components</h1>
+        <div class="instructions">Click / Drag / Hover the elements in the scene</div>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

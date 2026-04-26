@@ -6,6 +6,7 @@ uniform vec2 uResolution;
 uniform vec2 uMousePos;
 uniform sampler2D uTitleTexture;    // L3: "TOO DEEP"
 uniform sampler2D uArtistTexture;   // L4: "JEFF SORKOWITZ"
+uniform sampler2D uCountdownTexture; // L5: Countdown timer
 
 varying vec2 vUv;
 
@@ -200,6 +201,10 @@ void main() {
   // L4: "JEFF SORKOWITZ" text
   vec4 artistColor = texture2D(uArtistTexture, uv);
   result = artistColor + result * (1.0 - artistColor.a);
+
+  // L5: Countdown timer
+  vec4 countdownColor = texture2D(uCountdownTexture, uv);
+  result = countdownColor + result * (1.0 - countdownColor.a);
 
   gl_FragColor = result;
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skeuomorphic UI Iterations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="iteration-container">
+        <h1>Skeuomorphic UI Iterations</h1>
+
+        <section class="ui-section">
+            <h2>Control Panel</h2>
+            <div class="variations" id="tape-deck-container">
+                <div class="element-card">
+                    <h3>V3: Tape Deck & Ring LED BASS</h3>
+                    <div style="display: flex; gap: 3rem; align-items: flex-end;">
+                        <!-- Inline Panel -->
+                        <div class="inline-panel metal">
+
+                            <div class="bento-well play-well">
+                                <button class="bento-btn tape-btn play" id="tape-play-3">
+                                    <div class="tape-led"></div>
+                                    <span class="icon">▶</span>
+                                </button>
+                            </div>
+
+                            <div class="bento-well pause-well">
+                                <button class="bento-btn tape-btn pause pressed" id="tape-pause-3">
+                                    <span class="icon">⏸</span>
+                                </button>
+                            </div>
+
+                            <div class="bento-well presave-well">
+                                <button class="bento-btn tape-btn presave" id="tape-presave-3">
+                                    <div class="presave-frosted-glass"></div>
+                                    <span class="presave-content">
+                                        <svg class="presave-heart" width="16" height="16" viewBox="0 0 24 24"
+                                            fill="currentColor">
+                                            <path
+                                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                        </svg>
+                                        <span class="presave-text">Presave</span>
+                                    </span>
+                                </button>
+                            </div>
+
+                            <!-- BASS Sub Knob V3 inline -->
+                            <div class="bento-well knob-well">
+                                <div class="knob-cluster" style="position: relative; width: 94px; height: 94px;">
+                                    <div class="knob-led-ring-outer" id="bass-ring-3"
+                                        style="position: absolute; inset: 0;">
+                                    </div>
+                                    <div class="sub-knob" id="bass-knob-3" data-rotation="210"
+                                        style="position: absolute; top: 12px; left: 12px; margin: 0; z-index: 2;">
+                                        <div class="sub-knob-floor-shadow"></div>
+                                        <div class="sub-knob-pivot pivot-3" style="position: absolute; inset: 0;"></div>
+                                        <div class="pivot-3-cap"></div>
+                                        <div class="sub-knob-pivot-notch" style="pointer-events: none;">
+                                            <div class="knob-embossed-notch glow-off"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sub-label glow-off" id="bass-label-3">BASS</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ui-section">
+            <h2>Mobile BASS Fader</h2>
+            <div class="variations" id="sliders-container">
+                <div class="element-card">
+                    <h3>V3: Segmented LED Mobile BASS</h3>
+                    <div class="mobile-fader-wrapper metal"
+                        style="display: flex; flex-direction: column; align-items: center; padding-top: 15px;">
+                        <div style="display: flex; gap: 12px; height: 180px; position: relative;">
+                            <div class="fader-led-container" id="fader-leds-3"
+                                style="position: relative; width: 12px; height: 100%;"></div>
+                            <div class="fader-track-container" id="fader-track-3"
+                                style="position: relative; width: 42px; height: 100%;">
+                                <!-- Recessed track slit -->
+                                <div class="fader-slit"
+                                    style="position: absolute; top: 12px; bottom: 12px; left: 50%; width: 10px; margin-left: -5px; background: #080808; border-radius: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);">
+                                </div>
+                                <!-- Thumb -->
+                                <div class="metal-fader" id="fader-handle-3"
+                                    style="position: absolute; top: 156px; left: 0; width: 100%; height: 24px; cursor: ns-resize;">
+                                    <div class="fader-embossed-notch glow-off"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sub-label glow-off" id="fader-label-3"
+                            style="text-align: center; margin-top: 15px;">BASS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

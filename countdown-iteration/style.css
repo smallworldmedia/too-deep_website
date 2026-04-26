@@ -763,3 +763,176 @@ h2 {
         0 0 8px rgba(0, 229, 255, .8),
         inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
+
+/* =========================================
+   COUNTDOWN VARIATIONS CSS
+========================================= */
+
+/* Common styles */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap');
+
+.release-lbl {
+    font-size: 11px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 300;
+    color: #666;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 20px;
+    text-transform: uppercase;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(114, 221, 249, 0.1);
+}
+
+
+/* Base LCD Screen class (shared) */
+.lcd-screen {
+    background: linear-gradient(to bottom, #020304 0%, #080c14 100%);
+    box-shadow: 
+        inset 0 10px 15px rgba(0, 0, 0, 1), 
+        inset 0 0 5px rgba(0, 0, 0, 0.8),
+        0 1px 1px rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #000;
+    position: relative;
+    overflow: hidden;
+}
+.lcd-screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 50%);
+    pointer-events: none;
+}
+.lcd-time {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 200;
+    font-size: 34px;
+    display: flex;
+    gap: 4px;
+    letter-spacing: 2px;
+}
+.lcd-colon {
+    opacity: 0.8;
+}
+.lcd-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4px;
+    font-size: 10px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+.lcd-release-text {
+    font-size: 9px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 200;
+    letter-spacing: 3px;
+    margin-top: 10px;
+}
+
+/* VARIATION 2A: Classic Pink LCD */
+.v2a-theme .lcd-time {
+    color: #ff6bb5;
+    text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+.v2a-theme .lcd-labels {
+    color: #555;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+.v2a-theme .lcd-release-text {
+    color: #ff6bb5;
+    opacity: 0.6;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* VARIATION 2B: Cyan Monolithic */
+.v2b-theme {
+    background: linear-gradient(to bottom, #021a1f 0%, #080c14 100%);
+    box-shadow:
+        inset 0 10px 15px rgba(0, 0, 0, 1),
+        inset 0 0 8px rgba(0, 255, 255, 0.2),
+        0 1px 1px rgba(255, 255, 255, 0.1);
+}
+.v2b-theme .lcd-time {
+    color: #00ffff;
+    text-shadow: 0 0 16px rgba(0, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+.v2b-theme .lcd-labels {
+    color: #00cccc;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+.v2b-theme .lcd-release-text {
+    color: #00ffff;
+    opacity: 0.7;
+    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+
+/* VARIATION 2C: Grid Phosphor CRT */
+.crt-matrix {
+    background: linear-gradient(to bottom, #081a08 0%, #030803 100%);
+}
+.crt-matrix::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 0, 0.05) 2px, rgba(0, 255, 0, 0.05) 4px);
+    pointer-events: none;
+    z-index: 1;
+}
+.v2c-theme .lcd-time {
+    color: #4aff4a;
+    text-shadow: 0 0 8px rgba(74, 255, 74, 0.8), 0 0 24px rgba(74, 255, 74, 0.4);
+    z-index: 2;
+    position: relative;
+}
+.v2c-theme .lcd-labels {
+    color: #006600;
+    z-index: 2;
+    position: relative;
+}
+.v2c-theme .lcd-release-text {
+    color: #4aff4a;
+    z-index: 2;
+    position: relative;
+    opacity: 0.8;
+}
+
+/* VARIATION 2D: Ghost White Minimal */
+.deeper-socket {
+    box-shadow: 
+        inset 0 1px 3px rgba(255,255,255,0.4),
+        0 4px 6px rgba(0,0,0,0.6),
+        inset 0 -2px 4px rgba(0,0,0,0.8);
+}
+.matte-glass {
+    background: #000;
+    box-shadow:
+        inset 0 16px 20px rgba(0, 0, 0, 1),
+        inset 0 0 8px rgba(0, 0, 0, 1),
+        0 1px 0px rgba(255, 255, 255, 0.05);
+}
+.matte-glass::after {
+    /* Minimal glare for the matte glass look */
+    background: linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0) 50%);
+}
+.v2d-theme .lcd-time {
+    color: #ffffff;
+    font-weight: 100;
+    text-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
+}
+.v2d-theme .lcd-colon {
+    opacity: 0.5;
+}
+.v2d-theme .lcd-labels {
+    color: #555;
+}
+.v2d-theme .lcd-release-text {
+    color: #fff;
+    opacity: 0.5;
+}
