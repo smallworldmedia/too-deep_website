@@ -253,6 +253,15 @@ body {
   gap: 2px;
 }
 
+/* Horizontal divider between release label and controls */
+.panel-divider-horizontal {
+  height: 1px;
+  width: calc(100% - 12px);
+  margin: 1px 0;
+  background: rgba(114, 221, 249, 0.1);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
 /* Vertical divider between sections */
 .panel-divider {
   width: 1px;
