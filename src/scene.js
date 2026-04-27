@@ -58,7 +58,6 @@ export function createScene(renderer) {
         uniforms.uArtistTexture.value.dispose();
         uniforms.uTitleTexture.value = newTitle.texture;
         uniforms.uArtistTexture.value = newArtist.texture;
-        // Note: countdown texture resize is handled in main.js updateCountdown()
     }
 
     return { scene, camera, uniforms, mesh, material, onResize };

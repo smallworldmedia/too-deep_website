@@ -6,15 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Too Deep — Jeff Sorkowitz</title>
   <meta name="description" content="Too Deep by Jeff Sorkowitz — Interactive artwork." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap"
-    rel="stylesheet" />
+  <link rel="preload" href="/fonts/Italiana-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/Aspekta-450.woff2" as="font" type="font/woff2" crossorigin />
   <style>
     @font-face {
+      font-family: 'Italiana';
+      src: url('/fonts/Italiana-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
       font-family: 'Aspekta-450';
-      src: url('https://assets.unicorn.studio/fonts/custom/2XkgAIoiFOemW74z0NEtIhY9Jtl2/Aspekta-450/Aspekta-450.woff2') format('woff2');
+      src: url('/fonts/Aspekta-450.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
       font-display: swap;

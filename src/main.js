@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import { createScene } from './scene.js';
 import { createPostProcessing } from './postprocessing.js';
 import { AudioEngine } from './audioEngine.js';
-// Countdown texture removed — release date is now a DOM element in the control panel
 
 // ================================================================
 // PLATFORM LINKS
@@ -132,80 +131,6 @@ function initBassKnob() {
     bassKnob.addEventListener('pointercancel', () => { isDragging = false; document.body.style.cursor = ''; });
 }
 
-// ================================================================
-// BASS FADER — Mobile Vertical Drag
-// ================================================================
-function initBassFader() {
-    const faderHandle = document.getElementById('fader-handle');
-    const faderTrack = document.getElementById('fader-track');
-    const faderLeds = document.getElementById('fader-leds');
-    const faderLabel = document.getElementById('fader-label');
-    if (!faderHandle || !faderTrack) return;
-
-    const faderNotch = faderHandle.querySelector('.fader-embossed-notch');
-    let isDragging = false;
-    let startYFader = 0;
-    let currentYVal = 78;  // 78=midpoint=50%, 156=bottom=0%, 0=top=100%
-    const maxTravel = 156;
-
-    // Generate LED segments
-    if (faderLeds) {
-        faderLeds.innerHTML = '';
-        const numFaderSegments = 16;
-        const faderSegmentsArray = [];
-        for (let i = 0; i <= numFaderSegments; i++) {
-            const led = document.createElement('div');
-            led.className = 'led-segment-notch fader-led-notch';
-            const progress = i / numFaderSegments;
-            const targetLedY = 168 - (progress * 156) - 1.25;
-            led.style.top = `${targetLedY}px`;
-            led.style.setProperty('--seg-clr', `hsl(${200 - 10 * progress}, 100%, 29%)`);
-            faderLeds.appendChild(led);
-            faderSegmentsArray.push({ requiredThumbY: 156 - (progress * 156), el: led });
-        }
-
-        function updateFader(yPos) {
-            faderSegmentsArray.forEach(seg => {
-                if (yPos < 154 && yPos <= seg.requiredThumbY + 2) {
-                    seg.el.classList.add('active');
-                } else {
-                    seg.el.classList.remove('active');
-                }
-            });
-            if (yPos < 154) {
-                faderNotch.classList.add('glow-on'); faderNotch.classList.remove('glow-off');
-                faderLabel.classList.add('glow-on'); faderLabel.classList.remove('glow-off');
-            } else {
-                faderNotch.classList.add('glow-off'); faderNotch.classList.remove('glow-on');
-                faderLabel.classList.add('glow-off'); faderLabel.classList.remove('glow-on');
-            }
-            faderHandle.style.top = `${yPos}px`;
-            // Map yPos 156→0 to subGain 0→2
-            subGain = Math.max(0, Math.min(2, ((maxTravel - yPos) / maxTravel) * 2));
-        }
-
-        updateFader(currentYVal);
-
-        faderHandle.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            isDragging = true;
-            startYFader = e.clientY;
-            faderHandle.setPointerCapture(e.pointerId);
-            document.body.style.cursor = 'ns-resize';
-        });
-
-        faderHandle.addEventListener('pointermove', (e) => {
-            if (!isDragging) return;
-            const deltaY = e.clientY - startYFader;
-            currentYVal = Math.max(0, Math.min(156, currentYVal + deltaY));
-            updateFader(currentYVal);
-            startYFader = e.clientY;
-        });
-
-        faderHandle.addEventListener('pointerup', () => { isDragging = false; document.body.style.cursor = ''; });
-        faderHandle.addEventListener('pointercancel', () => { isDragging = false; document.body.style.cursor = ''; });
-    }
-}
 
 // ================================================================
 // RENDER PLATFORM BUTTONS
