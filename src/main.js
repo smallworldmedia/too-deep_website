@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { createScene } from './scene.js';
 import { createPostProcessing } from './postprocessing.js';
 import { AudioEngine } from './audioEngine.js';
-import { createCountdownTexture, updateCountdownTexture } from './textRenderer.js';
+// Countdown texture removed — release date is now a DOM element in the control panel
 
 // ================================================================
 // PLATFORM LINKS
@@ -80,7 +80,7 @@ function initBassKnob() {
         segContainer.style.transform = `rotate(${angle}deg)`;
         const led = document.createElement('div');
         led.className = 'led-segment-notch';
-        led.style.setProperty('--seg-clr', `hsl(${200 - 10 * (i / numSegments)}, 100%, 29%)`);
+        led.style.setProperty('--seg-clr', `hsl(${195 - 8 * (i / numSegments)}, 100%, 50%)`);
         segContainer.appendChild(led);
         ringOuter.appendChild(segContainer);
         segmentsArray.push({ angle, el: led });
@@ -230,20 +230,7 @@ function renderPlatformButtons() {
 
 }
 
-// ================================================================
-// RELEASE DATE (replaces countdown timer)
-// ================================================================
-
-// Release date canvas/texture state — populated after scene init
-let countdownCanvas = null;
-let countdownCtx = null;
-let countdownTexture = null;
-
-function renderReleaseDate() {
-    if (!countdownCanvas || !countdownCtx || !countdownTexture) return;
-    updateCountdownTexture(countdownCanvas, countdownCtx, window.innerWidth, window.innerHeight);
-    countdownTexture.needsUpdate = true;
-}
+// Release date is now a DOM element in the control panel — no canvas rendering needed
 
 // ================================================================
 // SHARE HANDLER
@@ -327,7 +314,7 @@ function initPanel() {
 
     // Scroll / Swipe to open/close
     window.addEventListener('wheel', (e) => {
-        if (e.target.closest('.sub-knob') || e.target.closest('.metal-fader')) return;
+        if (e.target.closest('.sub-knob')) return;
 
         if (e.deltaY > 10 && !isPanelOpen) {
             setPanel(true);
@@ -339,13 +326,13 @@ function initPanel() {
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
         if (window.innerWidth <= 768) return;
-        if (e.target.closest('.sub-knob') || e.target.closest('.metal-fader')) return;
+        if (e.target.closest('.sub-knob')) return;
         touchStartY = e.touches[0].clientY;
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
         if (window.innerWidth <= 768) return;
-        if (e.target.closest('.sub-knob') || e.target.closest('.metal-fader')) return;
+        if (e.target.closest('.sub-knob')) return;
         const touchY = e.touches[0].clientY;
         const deltaY = touchStartY - touchY;
 
@@ -432,8 +419,7 @@ function onResize() {
     sceneResize();
     ppResize();
 
-    // Redraw release date at new viewport size
-    renderReleaseDate();
+
 }
 window.addEventListener('resize', onResize);
 
@@ -475,32 +461,100 @@ function animate() {
 }
 
 // ================================================================
+// INTRO ANIMATION — choreographed entrance sequence
+// ================================================================
+function runIntroAnimation() {
+    // Easing: starts strong, very smoothly falls into end position
+    function easeOutExpo(t) {
+        return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    // Animation targets (from → to)
+    const animations = [
+        {
+            delay: 200,     // Jeff Sorkowitz first
+            duration: 700,
+            update: (t) => {
+                const e = easeOutExpo(t);
+                uniforms.uArtistOpacity.value = e;
+                uniforms.uArtistScale.value = 0.92 + 0.08 * e;
+            }
+        },
+        {
+            delay: 550,     // TOO DEEP follows
+            duration: 700,
+            update: (t) => {
+                const e = easeOutExpo(t);
+                uniforms.uTitleOpacity.value = e;
+                uniforms.uTitleScale.value = 0.92 + 0.08 * e;
+            }
+        },
+    ];
+
+    // Bottom control elements to reveal (in order)
+    const controlSelectors = [
+        '.controls-panel.intro-hidden',       // Unified controls panel
+    ];
+    const controlStartDelay = 1000;  // As DEEP appears
+    const controlStagger = 150;      // Between each control
+
+    const startTime = performance.now();
+
+    function tick(now) {
+        const elapsed = now - startTime;
+        let allDone = true;
+
+        // Drive shader-based text animations
+        for (const anim of animations) {
+            const localTime = elapsed - anim.delay;
+            if (localTime < 0) {
+                allDone = false;
+                continue;
+            }
+            const t = Math.min(localTime / anim.duration, 1.0);
+            anim.update(t);
+            if (t < 1.0) allDone = false;
+        }
+
+        // Trigger control slide-ins via CSS class swap
+        for (let i = 0; i < controlSelectors.length; i++) {
+            const triggerTime = controlStartDelay + i * controlStagger;
+            if (elapsed >= triggerTime) {
+                const el = document.querySelector(controlSelectors[i]);
+                if (el && !el.classList.contains('intro-visible')) {
+                    el.classList.add('intro-visible');
+                }
+            } else {
+                allDone = false;
+            }
+        }
+
+        if (!allDone) {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    requestAnimationFrame(tick);
+}
+
+// ================================================================
 // INIT
 // ================================================================
 document.fonts.ready.then(() => {
     setTimeout(() => {
         sceneResize();
 
-        // Countdown texture init
-        const cdResult = createCountdownTexture(window.innerWidth, window.innerHeight);
-        countdownCanvas = cdResult.canvas;
-        countdownCtx = cdResult.ctx;
-        countdownTexture = cdResult.texture;
-        // Link texture to scene uniform
-        if (uniforms.uCountdownTexture) {
-            uniforms.uCountdownTexture.value = countdownTexture;
-        }
-
         // UI init
         renderPlatformButtons();
-        renderReleaseDate();
         initShare();
         initPanel();
         initPlayButton();
         initBassKnob();
-        initBassFader();
 
         // Start render loop
         animate();
+
+        // Start intro animation sequence
+        runIntroAnimation();
     }, 100);
 });

@@ -6,6 +6,7 @@ import * as THREE from 'three';
 
 const REF_WIDTH = 1920;
 const REF_HEIGHT = 1080;
+const MAX_DESKTOP_SCALE = 1.0;
 const IS_MOBILE_PORTRAIT = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
 
 /**
@@ -28,7 +29,7 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
     const MIN_MOBILE_SCALE = 0.42;
-    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.22, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.22, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
 
     // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
@@ -75,7 +76,7 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
     const MIN_MOBILE_SCALE = 0.42;
-    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale);
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
     const fontSize = Math.round(100 * scale);
     const letterSpacing = 2 * scale;
 
@@ -111,85 +112,19 @@ function drawTextWithSpacing(ctx, text, x, y, spacing) {
         if (i < chars.length - 1) totalWidth += spacing;
     }
 
+    // Use left alignment for each character — avoids sidebearing drift
+    // that accumulates with center alignment across many characters
+    const savedAlign = ctx.textAlign;
+    ctx.textAlign = 'left';
+
     let currentX = x - totalWidth / 2;
 
     for (let i = 0; i < chars.length; i++) {
-        const charWidth = ctx.measureText(chars[i]).width;
-        ctx.fillText(chars[i], currentX + charWidth / 2, y);
-        currentX += charWidth + spacing;
-    }
-}
-
-/**
- * Create a canvas texture for the countdown timer
- * Positioned at the top of the viewport to match the old DOM placement
- * Returns { texture, canvas, ctx } so we can re-draw each second
- */
-export function createCountdownTexture(viewportWidth, viewportHeight) {
-    const canvas = document.createElement('canvas');
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    canvas.width = viewportWidth * dpr;
-    canvas.height = viewportHeight * dpr;
-
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-
-    return { texture, canvas, ctx };
-}
-
-/**
- * Draw the release date text — no countdown timer
- * Renders "RELEASING MAY 1, 2026" prominently at the top of the viewport
- */
-export function updateCountdownTexture(canvas, ctx, viewportWidth, viewportHeight) {
-    const dpr = Math.min(window.devicePixelRatio, 2);
-
-    // Resize canvas if viewport changed
-    if (canvas.width !== viewportWidth * dpr || canvas.height !== viewportHeight * dpr) {
-        canvas.width = viewportWidth * dpr;
-        canvas.height = viewportHeight * dpr;
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.scale(dpr, dpr);
+        ctx.fillText(chars[i], currentX, y);
+        currentX += ctx.measureText(chars[i]).width + spacing;
     }
 
-    ctx.clearRect(0, 0, viewportWidth, viewportHeight);
-
-    // Dynamic mobile detection — rechecked every frame
-    const isMobile = viewportWidth <= 768 && viewportHeight > viewportWidth;
-
-    // Scale based on viewport width
-    const widthScale = viewportWidth / REF_WIDTH;
-    const scale = isMobile
-        ? Math.max(widthScale * 1.8, 0.55)
-        : Math.max(widthScale, 0.5);
-
-    // "RELEASING MAY 1, 2026" — large and prominent
-    const releaseFontSize = Math.max(Math.round(48 * scale), 24);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = `700 ${releaseFontSize}px "Aspekta-450", sans-serif`;
-    ctx.letterSpacing = `${Math.round(1.2 * scale)}px`;
-    ctx.fillStyle = 'rgba(196, 241, 251, 0.9)';
-    const centerX = viewportWidth / 2;
-
-    // Calculate top of "TOO" text to center release date between viewport top and TOO
-    const titleWidthScale = viewportWidth / REF_WIDTH;
-    const titleHeightScale = viewportHeight / REF_HEIGHT;
-    const titleScale = isMobile
-        ? Math.max(titleWidthScale * 1.22, 0.42)
-        : Math.min(titleWidthScale, titleHeightScale);
-    const titleFontSize = Math.round(600 * titleScale);
-    const titleCenterY = viewportHeight / 2 + 45 * titleScale;
-    const tooY = titleCenterY + (-270 * titleScale);
-    const tooTopEdge = tooY - titleFontSize / 2;
-
-    // Center between viewport top (0) and the top edge of TOO
-    const topY = Math.round(tooTopEdge / 2);
-    ctx.fillText('RELEASING MAY 1, 2026', centerX, topY);
+    ctx.textAlign = savedAlign;
 }
+
 

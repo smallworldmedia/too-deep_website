@@ -6,7 +6,12 @@ uniform vec2 uResolution;
 uniform vec2 uMousePos;
 uniform sampler2D uTitleTexture;    // L3: "TOO DEEP"
 uniform sampler2D uArtistTexture;   // L4: "JEFF SORKOWITZ"
-uniform sampler2D uCountdownTexture; // L5: Countdown timer
+
+
+uniform float uTitleOpacity;        // Intro animation: 0→1
+uniform float uTitleScale;          // Intro animation: 0.92→1.0
+uniform float uArtistOpacity;       // Intro animation: 0→1
+uniform float uArtistScale;         // Intro animation: 0.92→1.0
 
 varying vec2 vUv;
 
@@ -194,17 +199,23 @@ void main() {
   vec4 adjusted = computeColorAdj(result);
   result = adjusted;
 
-  // L3: "TOO DEEP" text
-  vec4 titleColor = texture2D(uTitleTexture, uv);
+  // L3: "TOO DEEP" text — with intro scale + opacity
+  vec2 titleUv = (uv - 0.5) / max(uTitleScale, 0.001) + 0.5;
+  vec4 titleColor = vec4(0.0);
+  if (titleUv.x >= 0.0 && titleUv.x <= 1.0 && titleUv.y >= 0.0 && titleUv.y <= 1.0) {
+    titleColor = texture2D(uTitleTexture, titleUv);
+  }
+  titleColor.a *= uTitleOpacity;
   result = titleColor + result * (1.0 - titleColor.a);
 
-  // L4: "JEFF SORKOWITZ" text
-  vec4 artistColor = texture2D(uArtistTexture, uv);
+  // L4: "JEFF SORKOWITZ" text — with intro scale + opacity
+  vec2 artistUv = (uv - 0.5) / max(uArtistScale, 0.001) + 0.5;
+  vec4 artistColor = vec4(0.0);
+  if (artistUv.x >= 0.0 && artistUv.x <= 1.0 && artistUv.y >= 0.0 && artistUv.y <= 1.0) {
+    artistColor = texture2D(uArtistTexture, artistUv);
+  }
+  artistColor.a *= uArtistOpacity;
   result = artistColor + result * (1.0 - artistColor.a);
-
-  // L5: Countdown timer
-  vec4 countdownColor = texture2D(uCountdownTexture, uv);
-  result = countdownColor + result * (1.0 - countdownColor.a);
 
   gl_FragColor = result;
 }

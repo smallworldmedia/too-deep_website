@@ -37,7 +37,7 @@ body {
   right: 20px;
   z-index: 40;
   font-family: 'Aspekta-450', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 1px;
   color: rgba(114, 221, 249, 0.9);
   background: rgba(10, 40, 80, 0.6);
@@ -80,6 +80,23 @@ body {
 }
 
 /* ========================================
+   INTRO ANIMATION — bottom controls slide-in
+   ======================================== */
+.intro-hidden {
+  transform: translateY(120px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-visible {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================
    BOTTOM ASSEMBLY — controls + panel
    ======================================== */
 #bottom-assembly {
@@ -89,7 +106,7 @@ body {
   width: 80%;
   min-width: 320px;
   max-width: 560px;
-  bottom: 16px;
+  bottom: 42px;
   z-index: 30;
   display: flex;
   flex-direction: column;
@@ -122,20 +139,127 @@ body {
   --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-.tape-deck-panel {
+.controls-panel {
   display: inline-flex;
-  gap: 4px;
-  padding: 12px 6px 2px 6px;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 8px 6px 2px 6px;
   overflow: visible;
   position: relative;
   border-radius: 8px;
   border: 1px solid #111;
 }
 
-.tape-deck-panel.metal {
+.controls-panel.metal {
   background: rgba(10, 30, 60, 0.55);
   border-color: rgba(114, 221, 249, 0.15);
   box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.08);
+}
+
+/* Release date label — runs full width above the controls */
+.panel-release-label {
+  font-family: 'Aspekta-450', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #c4f1fb;
+  text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  width: 100%;
+  padding: 2px 8px 6px 8px;
+  white-space: nowrap;
+  /* Flicker synced with presave button */
+  animation: releaseLabelPulse 2.5s infinite linear;
+}
+
+@keyframes releaseLabelPulse {
+  0% {
+    opacity: 0.7;
+    filter: brightness(0.85);
+  }
+
+  2% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  4% {
+    opacity: 0.7;
+    filter: brightness(0.85);
+  }
+
+  8% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+
+  9% {
+    opacity: 0.7;
+    filter: brightness(0.85);
+  }
+
+  12% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+
+  40% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  42% {
+    opacity: 0.7;
+    filter: brightness(0.85);
+  }
+
+  44% {
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+
+  75% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  77% {
+    opacity: 0.55;
+    filter: brightness(0.75);
+  }
+
+  78% {
+    opacity: 1;
+    filter: brightness(1.08);
+  }
+
+  98% {
+    opacity: 1;
+    filter: brightness(1.1);
+  }
+
+  100% {
+    opacity: 0.7;
+    filter: brightness(0.85);
+  }
+}
+
+/* Inner row — horizontal layout for buttons, presave, knob */
+.controls-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Vertical divider between sections */
+.panel-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 4px;
+  background: rgba(114, 221, 249, 0.1);
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.3);
 }
 
 .tape-btn {
@@ -191,7 +315,7 @@ body {
 }
 
 /* Noise texture overlay */
-.tape-deck-panel .tape-btn::after {
+.controls-panel .tape-btn::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -227,54 +351,46 @@ body {
 
 @keyframes ledPulseRed {
   0% {
-    background: #003344;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
+    background: #330000;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4);
   }
 
   100% {
-    background: #006A92;
-    box-shadow: 0 0 6px #006A92, inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    background: #ff3b3b;
+    box-shadow: 0 0 6px rgba(255, 59, 59, 0.9), 0 0 14px rgba(255, 59, 59, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.8);
   }
 }
 
 .tape-btn.play.pressed .tape-led {
   animation: none;
-  background: #006A92;
-  box-shadow: 0 0 8px #006A92, inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  background: #72ddf9;
+  box-shadow: 0 0 6px rgba(114, 221, 249, 0.9), 0 0 14px rgba(114, 221, 249, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.9);
 }
 
-/* Icon styling */
+/* Icon styling — SVG icons inherit color */
 .tape-btn .icon {
   margin-top: 8px;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: rgba(114, 221, 249, 0.4);
-  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.12);
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.6)) drop-shadow(0 1px 1px rgba(114, 221, 249, 0.12));
   transition: all 0.2s;
+}
+
+.tape-btn .icon svg {
+  fill: currentColor;
 }
 
 .tape-btn.pressed .icon {
   color: #c4f1fb;
-  text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  filter: drop-shadow(0 0 12px rgba(114, 221, 249, 0.7)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.8));
 }
 
 /* ---------------------------------
-   Pre-Save Button (Standalone Horizontal)
+   Pre-Save Button (inside unified panel)
 --------------------------------- */
-.presave-panel {
-  display: inline-flex;
-  padding: 12px 6px 2px 6px;
-  overflow: visible;
-  border-radius: 8px;
-  border: 1px solid #111;
-}
-
-.presave-panel.metal {
-  background: rgba(10, 30, 60, 0.55);
-  border-color: rgba(114, 221, 249, 0.15);
-  box-shadow: inset 0 8px 12px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(114, 221, 249, 0.08);
-}
-
-.presave-panel .tape-btn.presave {
+.controls-panel .tape-btn.presave {
   width: auto;
   min-width: 100px;
   height: fill;
@@ -284,7 +400,7 @@ body {
   background: transparent;
   border-radius: 10px;
   border: none;
-  border-top: 1px solid rgba(255, 220, 230, 0.6);
+  border-top: 1px solid rgba(114, 221, 249, 0.6);
   /* No extrusion here — lives on frosted glass so it flickers */
   box-shadow: none;
   overflow: visible;
@@ -297,28 +413,28 @@ body {
   z-index: 1;
   border-radius: inherit;
   backdrop-filter: blur(8px);
-  background: radial-gradient(circle at center, rgba(245, 115, 135, 0.95) 0%, rgba(230, 90, 115, 0.88) 55%, rgba(220, 85, 110, 0.85) 100%);
+  background: radial-gradient(circle at center, rgba(20, 160, 190, 0.95) 0%, rgba(10, 130, 160, 0.88) 55%, rgba(5, 110, 140, 0.85) 100%);
   /* Extrusion lives here so it flickers with the face */
   box-shadow:
     /* Inner glow */
-    inset 0 0 35px rgba(255, 70, 100, 0.7),
+    inset 0 0 35px rgba(0, 180, 210, 0.7),
     inset 0 8px 15px rgba(255, 255, 255, 0.25),
     /* Gradual extrusion spread across full 12px depth */
-    0 2px 0 rgba(220, 85, 110, 0.95),
-    0 3px 0 rgba(210, 75, 100, 0.92),
-    0 4px 0 rgba(195, 65, 90, 0.88),
-    0 5px 0 rgba(180, 58, 80, 0.85),
-    0 6px 0 rgba(165, 50, 72, 0.82),
-    0 7px 0 rgba(150, 44, 64, 0.78),
-    0 8px 0 rgba(135, 38, 56, 0.74),
-    0 9px 0 rgba(120, 32, 50, 0.70),
-    0 10px 0 rgba(105, 28, 44, 0.66),
-    0 11px 0 rgba(90, 24, 38, 0.62),
-    0 12px 0 rgba(75, 18, 32, 0.58),
+    0 2px 0 rgba(5, 110, 140, 0.95),
+    0 3px 0 rgba(4, 100, 130, 0.92),
+    0 4px 0 rgba(3, 88, 115, 0.88),
+    0 5px 0 rgba(2, 78, 105, 0.85),
+    0 6px 0 rgba(2, 68, 95, 0.82),
+    0 7px 0 rgba(1, 58, 82, 0.78),
+    0 8px 0 rgba(1, 50, 72, 0.74),
+    0 9px 0 rgba(0, 42, 62, 0.70),
+    0 10px 0 rgba(0, 35, 52, 0.66),
+    0 11px 0 rgba(0, 28, 42, 0.62),
+    0 12px 0 rgba(0, 20, 32, 0.58),
     /* Soft floor shadow */
-    0 14px 10px rgba(30, 4, 12, 0.7),
+    0 14px 10px rgba(0, 8, 18, 0.7),
     /* Outward bloom */
-    0 0 50px rgba(240, 80, 110, 0.5);
+    0 0 50px rgba(0, 180, 220, 0.5);
 }
 
 .tape-btn.presave.pressed {
@@ -326,13 +442,13 @@ body {
 }
 
 .tape-btn.presave.pressed .presave-frosted-glass {
-  background: radial-gradient(circle at center, rgba(245, 115, 135, 0.95) 0%, rgba(230, 90, 115, 0.88) 55%, rgba(220, 85, 110, 0.85) 100%);
+  background: radial-gradient(circle at center, rgba(20, 160, 190, 0.95) 0%, rgba(10, 130, 160, 0.88) 55%, rgba(5, 110, 140, 0.85) 100%);
   box-shadow:
-    inset 0 0 50px rgba(255, 100, 130, 0.9),
+    inset 0 0 50px rgba(0, 200, 230, 0.9),
     inset 0 8px 15px rgba(255, 255, 255, 0.5),
     /* Collapsed extrusion when pressed */
-    0 1px 0 rgba(180, 55, 75, 0.6),
-    0 0 60px rgba(250, 100, 130, 0.8);
+    0 1px 0 rgba(0, 90, 120, 0.6),
+    0 0 60px rgba(0, 200, 240, 0.8);
   filter: brightness(1.2) contrast(1.15);
 }
 
@@ -358,13 +474,13 @@ body {
 
 /* Steady opaque text and icon for all states */
 .tape-btn.presave .presave-text {
-  color: #f9c9d1;
-  text-shadow: 0 0 20px rgb(233, 207, 211), 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #c4f1fb;
+  text-shadow: 0 0 20px rgba(114, 221, 249, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .tape-btn.presave .presave-heart {
-  fill: #f9c9d1;
-  filter: drop-shadow(0 0 20px rgb(233, 207, 211)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+  fill: #c4f1fb;
+  filter: drop-shadow(0 0 20px rgba(114, 221, 249, 0.8)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
 }
 
 /* Flicker animation targeting frosted glass when unpressed */
@@ -446,26 +562,29 @@ body {
 
 .tape-btn.presave.pressed .presave-heart {
   animation: none;
-  fill: #ff6bb5;
-  filter: drop-shadow(0 0 10px rgba(255, 107, 181, 0.7)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.8));
+  fill: #72ddf9;
+  filter: drop-shadow(0 0 10px rgba(114, 221, 249, 0.7)) drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.8));
 }
 
 .tape-btn.presave.pressed .presave-text {
   animation: none;
-  color: #f1acbd;
-  text-shadow: 0 0 12px rgba(255, 107, 181, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.4);
+  color: #c4f1fb;
+  text-shadow: 0 0 12px rgba(114, 221, 249, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================
+   BASS SECTION — inline inside unified panel
+========================================= */
+.bass-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px 0 0;
 }
 
 /* =========================================
    SUB CONTROL KNOB (BASS) — Ring LED V3
 ========================================= */
-.sub-control-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
 .sub-knob {
   width: 56px;
   height: 56px;
@@ -565,29 +684,19 @@ body {
   margin-left: -3px;
   width: 4.5px;
   height: 12px;
-  background: #444;
+  background: #003344;
   border-radius: 3px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 1px 1px rgba(21, 21, 21, 0.3);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), inset 0 1px 1px rgba(0, 0, 0, 0.8);
   z-index: 3;
-  transition: background 0.1s, box-shadow 0.1s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
 
 .knob-embossed-notch.glow-on {
-  background: #006A92;
-  box-shadow: 0 0 8px rgba(0, 106, 146, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
-}
-
-.v3-wrapper {
-  position: relative;
-  width: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.v3-wrapper .sub-label {
-  margin-top: 0;
+  background: #72ddf9;
+  box-shadow:
+    0 0 6px rgba(114, 221, 249, 0.9),
+    0 0 14px rgba(114, 221, 249, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* LED ring segments */
@@ -597,7 +706,7 @@ body {
   left: 0;
   width: 4px;
   height: 8px;
-  background: var(--seg-clr);
+  background: #003344;
   border-radius: 1.4px;
   opacity: 0.15;
   transition: opacity 0.1s, box-shadow 0.1s;
@@ -607,7 +716,11 @@ body {
 
 .led-segment-notch.active {
   opacity: 1;
-  box-shadow: 0 0 10px var(--seg-clr), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.8);
+  background: var(--seg-clr);
+  box-shadow:
+    0 0 6px var(--seg-clr),
+    0 0 14px var(--seg-clr),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
   z-index: 3;
 }
 
@@ -628,79 +741,7 @@ body {
   text-shadow: 0 0 12px rgba(114, 221, 249, 0.7), 0 -1px 1px rgba(0, 0, 0, 0.8);
 }
 
-/* =========================================
-   Mobile BASS Fader — Segmented LED
-========================================= */
-.mobile-fader-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  border: none;
-}
-
-.fader-led-notch {
-  position: absolute;
-  width: 12px;
-  height: 3.6px;
-  left: 0;
-  margin-bottom: -2px;
-  border-radius: 1.4px;
-  opacity: 0.15;
-  background: var(--seg-clr);
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 1);
-  transition: opacity 0.1s, box-shadow 0.1s;
-  z-index: 1;
-}
-
-.fader-led-notch.active {
-  opacity: 1;
-  z-index: 3;
-  box-shadow: 0 0 10px var(--seg-clr), inset 0 1px 2px rgba(255, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.8);
-}
-
-.metal-fader {
-  background: linear-gradient(135deg, rgba(25, 55, 85, 0.85) 0%, rgba(12, 28, 50, 0.9) 100%);
-  border-radius: 4px;
-  box-shadow:
-    inset 0 1px 1px rgba(114, 221, 249, 0.2),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.5),
-    0 2px 2px rgba(0, 0, 0, 0.7),
-    0 6px 8px rgba(0, 0, 0, 0.5);
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.metal-fader::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 4px;
-  background-image: var(--noise-texture);
-  mix-blend-mode: overlay;
-  opacity: 0.25;
-  pointer-events: none;
-}
-
-.fader-embossed-notch {
-  position: relative;
-  width: 16px;
-  height: 4px;
-  background: #444;
-  border-radius: 3px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 1px 1px rgba(255, 255, 255, 0.3);
-  z-index: 3;
-  transition: background 0.1s, box-shadow 0.1s;
-}
-
-.fader-embossed-notch.glow-on {
-  background: #006A92;
-  box-shadow: 0 0 8px rgba(0, 106, 146, .8), inset 0 1px 2px rgba(255, 255, 255, 0.8);
-}
-
-/* Responsive: desktop knob / mobile fader */
+/* Responsive: desktop knob / mobile fader — DEPRECATED, bass knob is now universal */
 .mobile-only {
   display: none !important;
 }
@@ -717,9 +758,9 @@ body {
   top: calc(16px + env(safe-area-inset-top));
   right: 16px;
   z-index: 100;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 18px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 21px;
   border: 1px solid rgba(114, 221, 249, 0.3);
   background: rgba(10, 40, 80, 0.35);
   backdrop-filter: blur(12px);
@@ -729,7 +770,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 4px;
   padding: 0 11px;
   overflow: hidden;
   outline: none;
@@ -761,36 +802,27 @@ body {
 
 .share-label {
   font-family: 'Aspekta-450', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1.2px;
+  font-size: 14px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
   white-space: nowrap;
-  max-width: 0;
-  opacity: 0;
+  max-width: 60px;
+  opacity: 1;
   overflow: hidden;
-  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease 0.05s,
-    margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-left: 0;
+  margin-left: 4px;
 }
 
 #share-btn:hover {
   background: rgba(10, 40, 80, 0.5);
   border-color: rgba(114, 221, 249, 0.5);
   box-shadow: 0 0 16px rgba(114, 221, 249, 0.15);
-  gap: 6px;
-}
-
-#share-btn:hover .share-label {
-  max-width: 60px;
-  opacity: 1;
-  margin-left: 4px;
 }
 
 /* Close mode — when overlay is open */
 #share-btn.close-mode {
-  /* Position near top-right of overlay content area */
-  top: calc(50vh - 220px);
-  right: calc(50vw - 280px);
+  /* Position near top-right of overlay content area, clamped to viewport */
+  top: max(calc(16px + env(safe-area-inset-top)), calc(50vh - 220px));
+  right: max(16px, calc(50vw - 280px));
   border-color: rgba(114, 221, 249, 0.5);
   background: rgba(10, 40, 80, 0.55);
 }
@@ -860,7 +892,7 @@ body {
 /* Pre-save prompt text — above platform buttons */
 .presave-prompt {
   font-family: 'Aspekta-450', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
@@ -998,7 +1030,7 @@ body {
 /* SWM credit — fixed bottom-left, always visible */
 .swm-credit {
   position: fixed;
-  bottom: calc(12px + env(safe-area-inset-bottom));
+  bottom: calc(4px + env(safe-area-inset-bottom));
   left: 16px;
   z-index: 35;
   text-decoration: none;
@@ -1058,14 +1090,6 @@ body {
    MOBILE ≤ 768px — show fader, hide knob
    ======================================== */
 @media (max-width: 768px) {
-  .desktop-only {
-    display: none !important;
-  }
-
-  .mobile-only {
-    display: flex !important;
-  }
-
   .platform-buttons {
     flex-direction: column;
     align-items: stretch;
@@ -1087,7 +1111,7 @@ body {
   #bottom-assembly {
     width: 100%;
     max-width: 100%;
-    bottom: 0;
+    bottom: 28px;
     padding: 0;
     left: 0;
     right: 0;
@@ -1098,38 +1122,20 @@ body {
     width: 100%;
     flex-direction: row;
     align-items: flex-end;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 16px calc(20px + env(safe-area-inset-bottom)) 16px;
   }
 
   .controls-row {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
-    position: relative;
-    gap: 0;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
-  /* Play/Pause — bottom-left */
-  .tape-deck-panel {
-    order: 1;
-  }
-
-  /* Pre-save — bottom-center */
-  .presave-panel {
-    order: 2;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-  }
-
-  /* Fader — bottom-right, aligned with share btn right edge */
-  .mobile-fader-wrapper {
-    order: 3;
-    margin-right: 0;
-  }
+  /* Unified controls panel — no ordering needed */
 
   .platform-pill {
     height: 38px;

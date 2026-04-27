@@ -503,12 +503,22 @@ const CymaticsSimShader = {
         // Runs every frame when bass is present — continuous tremor
         if (rumbleDrive > 0.001) {
           // Envelope grows with drive: quiet = localized, loud = whole plate
-          float rumbleRadius = 0.2 + rumbleDrive * 1.2;
+          #ifdef MOBILE
+            float rumbleRadius = 0.4 + rumbleDrive * .8;
+          #else
+            float rumbleRadius = 0.4 + rumbleDrive * 1.1;
+          #endif
           float rumbleEnvelope = smoothstep(0.005, 0.055, dist)
                                * (1.0 - smoothstep(rumbleRadius * 0.2, rumbleRadius, dist));
 
           // Dense tight rings — slightly tighter than transient layer
-          float rumbleRingFreq = 70.0;
+          #ifdef MOBILE
+            float rumbleRingFreq = 58.0;
+            float rumbleAmplitude = 0.012;
+          #else
+            float rumbleRingFreq = 70.0;
+            float rumbleAmplitude = 0.012;
+          #endif
           // Slow phase drift so rings feel alive, not frozen
           float rumbleDriftSpeed = 0.9;
           float rumblePhase = dist * rumbleRingFreq - uTime * rumbleDriftSpeed;
@@ -516,7 +526,6 @@ const CymaticsSimShader = {
 
           // Quadratic amplitude: quiet bass is much quieter than loud bass
           // (approximates nonlinear coupling — sub power ~ amplitude²)
-          float rumbleAmplitude = 0.025;
           float rumbleForce = rumbleRings * rumbleEnvelope * rumbleAmplitude * rumbleDrive * rumbleDrive;
           height += rumbleForce;
         }
@@ -524,19 +533,29 @@ const CymaticsSimShader = {
         // ---- LAYER B: Transient expanding ring pulses ----
         // Onset-triggered, age-driven propagation (existing implementation)
         if (hasTransientEnergy) {
-          float maxRadius = 1.8 + uSubGain * 0.5;
+          #ifdef MOBILE
+            float maxRadius = 1.8 + uSubGain * 0.3;
+          #else
+            float maxRadius = 1.8 + uSubGain * 0.5;
+          #endif
           float innerEase = 0.02;
           float outerEase = maxRadius * 0.75;
 
           float envelope = smoothstep(0.0, innerEase, dist)
                          * (1.0 - smoothstep(outerEase, maxRadius, dist));
 
-          float ringFreq = 100.0;
-          float propagationSpeed = 3.5;
+          #ifdef MOBILE
+            float ringFreq = 75.0;
+            float propagationSpeed = 3.0;
+            float amplitude = 0.005;
+          #else
+            float ringFreq = 100.0;
+            float propagationSpeed = 3.5;
+            float amplitude = 0.01;
+          #endif
           float phase = dist * ringFreq - age * propagationSpeed;
           float rings = sin(phase * TAU);
 
-          float amplitude = 0.01;
           float force = rings * envelope * timeDecay * amplitude * uSubGain;
           height += force;
         }
@@ -827,7 +846,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
       uResolution: { value: new THREE.Vector2(w, h) },
     },
     vertexShader: CymaticsSimShader.vertexShader,
-    fragmentShader: `#define SIM_SIZE ${simSize}\n#define CYMATICS_SPAWNS ${isMobile ? 2 : 3}\n` + CymaticsSimShader.fragmentShader,
+    fragmentShader: `#define SIM_SIZE ${simSize}\n#define CYMATICS_SPAWNS ${isMobile ? 2 : 3}\n${isMobile ? '#define MOBILE\n' : ''}` + CymaticsSimShader.fragmentShader,
   });
 
   const cymaticsQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), cymaticsSimMaterial);
