@@ -814,7 +814,7 @@ body {
 .broke-logo-label-wrap {
   overflow: hidden;
   max-width: 0;
-  transition: max-width 0.5s cubic-bezier(0.6, 1, 0.2, 1);
+  transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .broke-logo-label {
@@ -829,7 +829,9 @@ body {
   padding-right: 0px;
 }
 
-#broke-logo:hover .broke-logo-label-wrap {
+#broke-logo:hover .broke-logo-label-wrap,
+#broke-logo.touched .broke-logo-label-wrap,
+body.presave-active #broke-logo .broke-logo-label-wrap {
   max-width: 200px;
 }
 
@@ -1199,6 +1201,19 @@ body {
 
   .controls-row {
     gap: 10px;
+  }
+
+  .broke-logo-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  #broke-logo {
+    gap: 1px;
+  }
+
+  .broke-logo-label {
+    font-size: 13px;
   }
 }
 

@@ -204,6 +204,7 @@ function initPanel() {
 
     function setPanel(open) {
         isPanelOpen = open;
+        document.body.classList.toggle('presave-active', open);
         overlay.classList.toggle('active', open);
         backdrop.classList.toggle('active', open);
         presaveBtn.setAttribute('aria-expanded', String(open));
@@ -269,6 +270,28 @@ function initPanel() {
             touchStartY = touchY;
         }
     }, { passive: true });
+}
+
+// ================================================================
+// BROKE RECORDS LOGO — delayed navigation on mobile
+// ================================================================
+function initBrokeLogo() {
+    const logo = document.getElementById('broke-logo');
+    if (!logo) return;
+
+    const isMobile = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
+    if (!isMobile) return; // Desktop uses native link behavior
+
+    logo.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Trigger the label reveal (simulate hover state)
+        logo.classList.add('touched');
+        // Wait for the text animation to play out, then navigate
+        setTimeout(() => {
+            window.open('https://broke.nyc/', '_blank', 'noopener,noreferrer');
+            logo.classList.remove('touched');
+        }, 600);
+    });
 }
 
 // ================================================================
@@ -511,6 +534,7 @@ document.fonts.ready.then(() => {
         initShare();
         initPanel();
         initPlayButton();
+        initBrokeLogo();
         initBassKnob();
 
         // Start render loop
