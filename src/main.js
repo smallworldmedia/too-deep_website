@@ -151,11 +151,7 @@ function renderPlatformButtons() {
         a.innerHTML = `<img src="${logo}" alt="${label}" class="platform-logo" />`;
         container.appendChild(a);
     });
-
-
 }
-
-// Release date is now a DOM element in the control panel — no canvas rendering needed
 
 // ================================================================
 // SHARE HANDLER
@@ -227,7 +223,6 @@ function initPanel() {
 
     // Share button: close overlay if open, otherwise share
     if (shareBtn) {
-        const origClickHandler = shareBtn.onclick;
         shareBtn.addEventListener('click', (e) => {
             if (isPanelOpen) {
                 e.stopPropagation();
@@ -339,17 +334,17 @@ window.addEventListener('pointerdown', onPointerMove);
 // ================================================================
 // RESIZE
 // ================================================================
+let resizeTimer;
 function onResize() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
-
-    sceneResize();
-    ppResize();
-
-
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO));
+        sceneResize();
+        ppResize();
+    }, 100);
 }
 window.addEventListener('resize', onResize);
 
