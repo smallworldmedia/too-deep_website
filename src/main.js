@@ -393,6 +393,10 @@ function runIntroAnimation() {
     function easeOutExpo(t) {
         return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
     }
+    // Smooth ease for cursor sweep
+    function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
 
     // Animation targets (from → to)
     const animations = [
@@ -415,6 +419,16 @@ function runIntroAnimation() {
             }
         },
     ];
+
+    // Synthetic cursor sweep — bottom-left to top-right
+    // This triggers water ripples to show the surface is interactive
+    const cursorSweep = {
+        delay: 300,       // Start shortly after page loads
+        duration: 1800,   // Smooth sweep duration
+        startPos: { x: 0.15, y: 0.15 },  // Bottom-left (UV space: y is flipped)
+        endPos: { x: 0.85, y: 0.85 },    // Top-right
+        active: true,
+    };
 
     // Bottom control elements to reveal (in order)
     const controlSelectors = [
@@ -439,6 +453,26 @@ function runIntroAnimation() {
             const t = Math.min(localTime / anim.duration, 1.0);
             anim.update(t);
             if (t < 1.0) allDone = false;
+        }
+
+        // Drive synthetic cursor sweep — feeds into mousePos which
+        // the render loop's smoothMousePos lerp + ripple sim naturally consume
+        if (cursorSweep.active) {
+            const sweepLocal = elapsed - cursorSweep.delay;
+            if (sweepLocal < 0) {
+                allDone = false;
+            } else {
+                const t = Math.min(sweepLocal / cursorSweep.duration, 1.0);
+                const e = easeInOutCubic(t);
+                const sx = cursorSweep.startPos.x + (cursorSweep.endPos.x - cursorSweep.startPos.x) * e;
+                const sy = cursorSweep.startPos.y + (cursorSweep.endPos.y - cursorSweep.startPos.y) * e;
+                mousePos.set(sx, sy);
+                if (t >= 1.0) {
+                    cursorSweep.active = false;
+                } else {
+                    allDone = false;
+                }
+            }
         }
 
         // Trigger control slide-ins via CSS class swap

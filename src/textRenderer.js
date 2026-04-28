@@ -17,7 +17,6 @@ const MAX_DESKTOP_SCALE = 1.0;
 //   TOO top edge → DEEP bottom edge = 2 * 270 (offsets) + fontSize (600) = 1140px
 // Plus some breathing room top and bottom
 const TEXT_GROUP_HEIGHT_AT_SCALE_1 = 1200;
-const TOP_PADDING = 20;  // minimum breathing room above "TOO"
 
 function isMobilePortrait() {
     return window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
@@ -25,14 +24,21 @@ function isMobilePortrait() {
 
 /**
  * Compute the scale factor that ensures text fits both horizontally and vertically.
- * Returns { scale, panelReserve, centerY }
+ * Returns { scale, centerY }
  */
 function computeFittedScale(viewportWidth, viewportHeight) {
     const mobile = isMobilePortrait();
-    const PANEL_RESERVE = mobile ? 160 : 110;
 
-    // Width-based scale
-    const widthScale = viewportWidth / REF_WIDTH;
+    // Panel reserve: control panel height + bottom offset + safe-area + SWM footer
+    // Must match the actual CSS footprint so text never overlaps
+    const PANEL_RESERVE = mobile ? 240 : 110;
+    const TOP_PADDING = mobile ? 60 : 20;
+    // Side padding: match the 16px used by SWM footer and controls-group
+    const SIDE_PADDING = mobile ? 16 : 0;
+
+    // Width-based scale — account for horizontal padding
+    const effectiveWidth = viewportWidth - 2 * SIDE_PADDING;
+    const widthScale = effectiveWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
 
     let candidateScale;
@@ -45,14 +51,12 @@ function computeFittedScale(viewportWidth, viewportHeight) {
     // Height-based constraint:
     // The available vertical space = viewport - panel - top padding
     const availableHeight = viewportHeight - PANEL_RESERVE - TOP_PADDING;
-    // The text group at `candidateScale` occupies TEXT_GROUP_HEIGHT_AT_SCALE_1 * candidateScale
     const maxHeightScale = availableHeight / TEXT_GROUP_HEIGHT_AT_SCALE_1;
 
     // Use the smaller of width-based and height-based scales
     const scale = Math.min(candidateScale, maxHeightScale);
 
     // Center the text group in the available area (above panel)
-    // nudge slightly down so it doesn't feel top-heavy
     const centerY = TOP_PADDING + availableHeight / 2;
 
     return { scale, PANEL_RESERVE, centerY };
