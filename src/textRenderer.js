@@ -14,9 +14,10 @@ const REF_HEIGHT = 1080;
 const MAX_DESKTOP_SCALE = 1.0;
 
 // The text group's total height at scale=1 is:
-//   TOO top edge → DEEP bottom edge = 2 * 270 (offsets) + fontSize (600) = 1140px
-// Plus some breathing room top and bottom
-const TEXT_GROUP_HEIGHT_AT_SCALE_1 = 1200;
+//   TOO center at -270, DEEP center at +270 → span between centers = 540
+//   Each line extends ~fontSize/2 above and below center (textBaseline: 'middle')
+//   Total: 540 + 600 (full glyph height of TOO) + ~some descender margin = ~1500px
+const TEXT_GROUP_HEIGHT_AT_SCALE_1 = 1500;
 
 function isMobilePortrait() {
     return window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
@@ -120,7 +121,7 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
 
     // Artist text is slightly larger relative to title scale on mobile
     const mobile = isMobilePortrait();
-    const artistBoost = mobile ? 1.3 : 1.0;
+    const artistBoost = mobile ? 1.1 : 1.0;
     const artistScale = scale * artistBoost;
 
     const fontSize = Math.round(100 * artistScale);
@@ -131,8 +132,8 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
     ctx.fillStyle = '#79cce1';
     ctx.font = `400 ${fontSize}px Aspekta-450, sans-serif`;
 
-    // Position artist name slightly above true center (between TOO and DEEP)
-    const artistOffsetFromCenter = -43 * scale;
+    // Position artist name below center — between the two title words, pushed toward DEEP
+    const artistOffsetFromCenter = -28 * scale;
 
     drawTextWithSpacing(ctx, 'JEFF SORKOWITZ', viewportWidth * 0.48, centerY + artistOffsetFromCenter, letterSpacing);
 
