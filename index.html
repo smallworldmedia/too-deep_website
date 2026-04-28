@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Too Deep — Jeff Sorkowitz</title>
-  <meta name="description" content="Too Deep by Jeff Sorkowitz — Interactive artwork." />
+  <title>Too Deep by Jeff Sorkowitz | Interactive Artwork</title>
+  <meta name="description" content="Jeff Sorkowitz - Too Deep out May 1st on Broke Records" />
   <link rel="preload" href="/fonts/Italiana-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/Aspekta-450.woff2" as="font" type="font/woff2" crossorigin />
   <style>
@@ -25,11 +25,24 @@
       font-display: swap;
     }
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 
 <body>
   <canvas id="canvas"></canvas>
+
+  <!-- Broke Records logo — viewport top-left -->
+  <a id="broke-logo" href="https://broke.nyc/" target="_blank" rel="noopener noreferrer" aria-label="Broke Records">
+    <div class="broke-logo-icon">
+      <img src="/broke-records-icon.svg" alt="Broke Records" />
+    </div>
+    <div class="broke-logo-label-wrap">
+      <span class="broke-logo-label">BROKE RECORDS</span>
+    </div>
+  </a>
 
   <!-- Share button — viewport top-right -->
   <button id="share-btn" aria-label="Share this page">

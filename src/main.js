@@ -279,12 +279,14 @@ let subGain = 1.0;
 function initPlayButton() {
     const playBtn = document.getElementById('tape-play');
     const pauseBtn = document.getElementById('tape-pause');
+    const brokeLogo = document.getElementById('broke-logo');
     if (!playBtn || !pauseBtn) return;
 
     playBtn.addEventListener('click', async () => {
         // Update visual state immediately
         playBtn.classList.add('pressed');
         pauseBtn.classList.remove('pressed');
+        if (brokeLogo) brokeLogo.classList.add('spinning');
 
         try {
             audioEngine.createContext();
@@ -298,6 +300,7 @@ function initPlayButton() {
         // Update visual state immediately
         pauseBtn.classList.add('pressed');
         playBtn.classList.remove('pressed');
+        if (brokeLogo) brokeLogo.classList.remove('spinning');
 
         try {
             audioEngine.createContext();
@@ -389,9 +392,9 @@ function animate() {
 // INTRO ANIMATION — choreographed entrance sequence
 // ================================================================
 function runIntroAnimation() {
-    // Easing: starts strong, very smoothly falls into end position
-    function easeOutExpo(t) {
-        return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    // Easing: smooth deceleration — visible fade from 0% opacity
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
     }
     // Smooth ease for cursor sweep
     function easeInOutCubic(t) {
@@ -402,18 +405,18 @@ function runIntroAnimation() {
     const animations = [
         {
             delay: 200,     // Jeff Sorkowitz first
-            duration: 700,
+            duration: 1000,
             update: (t) => {
-                const e = easeOutExpo(t);
+                const e = easeOutCubic(t);
                 uniforms.uArtistOpacity.value = e;
                 uniforms.uArtistScale.value = 0.96 + 0.04 * e;
             }
         },
         {
             delay: 550,     // TOO DEEP follows
-            duration: 700,
+            duration: 1000,
             update: (t) => {
-                const e = easeOutExpo(t);
+                const e = easeOutCubic(t);
                 uniforms.uTitleOpacity.value = e;
                 uniforms.uTitleScale.value = 0.96 + 0.04 * e;
             }
