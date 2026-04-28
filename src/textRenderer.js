@@ -43,8 +43,8 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
 
     // Center-pinned with slight downward nudge so TOO stays in view
     const centerY = viewportHeight / 2 + 45 * scale;
-    const tooOffsetFromCenter = -220 * scale;
-    const deepOffsetFromCenter = 220 * scale;
+    const tooOffsetFromCenter = -270 * scale;
+    const deepOffsetFromCenter = 270 * scale;
 
     const tooY = centerY + tooOffsetFromCenter;
     const deepY = centerY + deepOffsetFromCenter;

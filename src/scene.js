@@ -28,7 +28,9 @@ export function createScene(renderer) {
         uTitleTexture: { value: title.texture },
         uArtistTexture: { value: artist.texture },
         uTitleOpacity: { value: 0.0 },
+        uTitleScale: { value: 0.96 },
         uArtistOpacity: { value: 0.0 },
+        uArtistScale: { value: 0.96 },
     };
 
     const material = new THREE.ShaderMaterial({

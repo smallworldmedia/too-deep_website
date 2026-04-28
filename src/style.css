@@ -170,8 +170,21 @@ body {
   width: 100%;
   padding: 2px 8px 6px 8px;
   white-space: nowrap;
+  overflow: hidden;
+  max-height: 30px;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease;
   /* Flicker synced with presave button */
   animation: releaseLabelPulse 2.5s infinite linear;
+}
+
+/* Smooth collapse when overlay is open */
+.panel-label-hidden {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 @keyframes releaseLabelPulse {
@@ -260,6 +273,8 @@ body {
   margin: 1px 0;
   background: rgba(114, 221, 249, 0.1);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
 }
 
 /* Vertical divider between sections */
