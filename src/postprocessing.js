@@ -514,10 +514,10 @@ const CymaticsSimShader = {
           // Dense tight rings — slightly tighter than transient layer
           #ifdef MOBILE
             float rumbleRingFreq = 58.0;
-            float rumbleAmplitude = 0.012;
+            float rumbleAmplitude = 0.032;
           #else
             float rumbleRingFreq = 70.0;
-            float rumbleAmplitude = 0.012;
+            float rumbleAmplitude = 0.032;
           #endif
           // Slow phase drift so rings feel alive, not frozen
           float rumbleDriftSpeed = 0.9;
@@ -547,7 +547,7 @@ const CymaticsSimShader = {
           #ifdef MOBILE
             float ringFreq = 75.0;
             float propagationSpeed = 3.0;
-            float amplitude = 0.005;
+            float amplitude = 0.01;
           #else
             float ringFreq = 100.0;
             float propagationSpeed = 3.5;

@@ -202,6 +202,8 @@ function initPanel() {
     const backdrop = document.getElementById('panel-backdrop');
     const presaveBtn = document.getElementById('tape-presave');
     const shareBtn = document.getElementById('share-btn');
+    const releaseLabel = document.getElementById('release-label');
+    const panelDivider = document.querySelector('.panel-divider-horizontal');
     if (!overlay || !backdrop || !presaveBtn) return;
 
     function setPanel(open) {
@@ -215,6 +217,9 @@ function initPanel() {
             shareBtn.classList.toggle('close-mode', open);
             shareBtn.setAttribute('aria-label', open ? 'Close overlay' : 'Share this page');
         }
+        // Hide release label + divider when overlay is open to reduce panel height
+        if (releaseLabel) releaseLabel.style.display = open ? 'none' : '';
+        if (panelDivider) panelDivider.style.display = open ? 'none' : '';
     }
 
     presaveBtn.addEventListener('click', () => setPanel(!isPanelOpen));
@@ -400,18 +405,14 @@ function runIntroAnimation() {
             delay: 200,     // Jeff Sorkowitz first
             duration: 700,
             update: (t) => {
-                const e = easeOutExpo(t);
-                uniforms.uArtistOpacity.value = e;
-                uniforms.uArtistScale.value = 0.92 + 0.08 * e;
+                uniforms.uArtistOpacity.value = easeOutExpo(t);
             }
         },
         {
             delay: 550,     // TOO DEEP follows
             duration: 700,
             update: (t) => {
-                const e = easeOutExpo(t);
-                uniforms.uTitleOpacity.value = e;
-                uniforms.uTitleScale.value = 0.92 + 0.08 * e;
+                uniforms.uTitleOpacity.value = easeOutExpo(t);
             }
         },
     ];

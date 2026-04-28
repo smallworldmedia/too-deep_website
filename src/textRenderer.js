@@ -29,7 +29,7 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
     const MIN_MOBILE_SCALE = 0.42;
-    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.22, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
+    const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.05, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
 
     // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
@@ -43,8 +43,8 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
 
     // Center-pinned with slight downward nudge so TOO stays in view
     const centerY = viewportHeight / 2 + 45 * scale;
-    const tooOffsetFromCenter = -270 * scale;
-    const deepOffsetFromCenter = 270 * scale;
+    const tooOffsetFromCenter = -220 * scale;
+    const deepOffsetFromCenter = 220 * scale;
 
     const tooY = centerY + tooOffsetFromCenter;
     const deepY = centerY + deepOffsetFromCenter;
