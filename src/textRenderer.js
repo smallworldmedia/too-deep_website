@@ -1,6 +1,11 @@
 /**
  * Text Renderer — renders "TOO DEEP" and "JEFF SORKOWITZ" to CanvasTexture
- * Text is center-pinned: vertical position scales with width, not height
+ * 
+ * Scaling strategy:
+ *   1. Compute a width-based scale (text must not overflow horizontally)
+ *   2. Compute a height-based scale (text group must fit between top of viewport
+ *      and top of the control panel, with padding)
+ *   3. Use the SMALLER of the two — guarantees no clipping in either axis
  */
 import * as THREE from 'three';
 
@@ -8,13 +13,53 @@ const REF_WIDTH = 1920;
 const REF_HEIGHT = 1080;
 const MAX_DESKTOP_SCALE = 1.0;
 
+// The text group's total height at scale=1 is:
+//   TOO top edge → DEEP bottom edge = 2 * 270 (offsets) + fontSize (600) = 1140px
+// Plus some breathing room top and bottom
+const TEXT_GROUP_HEIGHT_AT_SCALE_1 = 1200;
+const TOP_PADDING = 20;  // minimum breathing room above "TOO"
+
 function isMobilePortrait() {
     return window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
 }
 
 /**
+ * Compute the scale factor that ensures text fits both horizontally and vertically.
+ * Returns { scale, panelReserve, centerY }
+ */
+function computeFittedScale(viewportWidth, viewportHeight) {
+    const mobile = isMobilePortrait();
+    const PANEL_RESERVE = mobile ? 160 : 110;
+
+    // Width-based scale
+    const widthScale = viewportWidth / REF_WIDTH;
+    const heightScale = viewportHeight / REF_HEIGHT;
+
+    let candidateScale;
+    if (mobile) {
+        candidateScale = Math.max(widthScale * 1.05, 0.35);
+    } else {
+        candidateScale = Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
+    }
+
+    // Height-based constraint:
+    // The available vertical space = viewport - panel - top padding
+    const availableHeight = viewportHeight - PANEL_RESERVE - TOP_PADDING;
+    // The text group at `candidateScale` occupies TEXT_GROUP_HEIGHT_AT_SCALE_1 * candidateScale
+    const maxHeightScale = availableHeight / TEXT_GROUP_HEIGHT_AT_SCALE_1;
+
+    // Use the smaller of width-based and height-based scales
+    const scale = Math.min(candidateScale, maxHeightScale);
+
+    // Center the text group in the available area (above panel)
+    // nudge slightly down so it doesn't feel top-heavy
+    const centerY = TOP_PADDING + availableHeight / 2;
+
+    return { scale, PANEL_RESERVE, centerY };
+}
+
+/**
  * Create a canvas texture for the "TOO DEEP" title text
- * Position is pinned to center of available area (viewport minus panel zone)
  */
 export function createTitleTexture(viewportWidth, viewportHeight) {
     const canvas = document.createElement('canvas');
@@ -26,12 +71,7 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, viewportWidth, viewportHeight);
 
-    const widthScale = viewportWidth / REF_WIDTH;
-    const heightScale = viewportHeight / REF_HEIGHT;
-    const mobile = isMobilePortrait();
-    const PANEL_RESERVE = mobile ? 160 : 110;
-    const MIN_MOBILE_SCALE = 0.35;
-    const scale = mobile ? Math.max(widthScale * 1.05, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
+    const { scale, centerY } = computeFittedScale(viewportWidth, viewportHeight);
 
     const fontSize = Math.round(600 * scale);
     const letterSpacingTOO = -50 * scale;
@@ -42,8 +82,6 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.fillStyle = '#72ddf9';
     ctx.font = `400 ${fontSize}px Italiana`;
 
-    // Center in available area (above panel), with slight downward nudge
-    const centerY = (viewportHeight - PANEL_RESERVE) / 2 + 45 * scale;
     const tooOffsetFromCenter = -270 * scale;
     const deepOffsetFromCenter = 270 * scale;
 
@@ -74,22 +112,22 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, viewportWidth, viewportHeight);
 
-    const widthScale = viewportWidth / REF_WIDTH;
-    const heightScale = viewportHeight / REF_HEIGHT;
+    const { scale, centerY } = computeFittedScale(viewportWidth, viewportHeight);
+
+    // Artist text is slightly larger relative to title scale on mobile
     const mobile = isMobilePortrait();
-    const PANEL_RESERVE = mobile ? 160 : 110;
-    const MIN_MOBILE_SCALE = 0.35;
-    const scale = mobile ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
-    const fontSize = Math.round(100 * scale);
-    const letterSpacing = 2 * scale;
+    const artistBoost = mobile ? 1.3 : 1.0;
+    const artistScale = scale * artistBoost;
+
+    const fontSize = Math.round(100 * artistScale);
+    const letterSpacing = 2 * artistScale;
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#79cce1';
     ctx.font = `400 ${fontSize}px Aspekta-450, sans-serif`;
 
-    // Center in available area (above panel)
-    const centerY = (viewportHeight - PANEL_RESERVE) / 2 + 60 * scale;
+    // Position artist name slightly above true center (between TOO and DEEP)
     const artistOffsetFromCenter = -43 * scale;
 
     drawTextWithSpacing(ctx, 'JEFF SORKOWITZ', viewportWidth * 0.48, centerY + artistOffsetFromCenter, letterSpacing);

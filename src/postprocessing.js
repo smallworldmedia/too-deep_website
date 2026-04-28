@@ -99,7 +99,7 @@ const FogShader = {
       // Slight blur via jitter sampling — reduced radius to prevent text ghosting
       float ign = interleavedGradientNoise(gl_FragCoord.xy) - 0.5;
       vec2 texel = 1.0 / uResolution;
-      float blurStrength = 0.04;
+      float blurStrength = 0.02;
       float radius = blurStrength * 60.0 * fogNoise;
       vec2 at = (radius / uResolution) * vec2(1.0, uResolution.x / uResolution.y);
 
@@ -139,6 +139,7 @@ const BloomShader = {
     tDiffuse: { value: null },
     uResolution: { value: new THREE.Vector2() },
     uAudioHigh: { value: 0 },
+    uAudioMid: { value: 0 },
   },
   vertexShader: `
     varying vec2 vUv;
@@ -151,6 +152,7 @@ const BloomShader = {
     uniform sampler2D tDiffuse;
     uniform vec2 uResolution;
     uniform float uAudioHigh;
+    uniform float uAudioMid;
     varying vec2 vUv;
 
     float luma(vec3 c) { return dot(c, vec3(0.299, 0.587, 0.114)); }
@@ -198,7 +200,7 @@ const BloomShader = {
       // Dither (GLSL1 compatible)
       float dither = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
 
-      float bloomBoost = 0.874 + uAudioHigh * 0.3;
+      float bloomBoost = 0.874 + (uAudioHigh * 0.2) + (uAudioMid * 0.5);
       vec4 result = mix(finalColor, finalColor + vec4(bloom2 * bloomBoost, luma(bloom2)), bloomBoost);
       result.rgb += dither;
 
@@ -750,7 +752,7 @@ const WaterRippleCompositeShader = {
       vec3 refractedNormal = calculateNormal(refractedUv);
 
       // Sample with chromatic aberration
-      vec2 caOffset = (refractedUv - vUv) * 0.19 * 0.2;
+      vec2 caOffset = (refractedUv - vUv) * 0.19 * 0.4;
       vec4 refractedColor = texture2D(tDiffuse, refractedUv);
       refractedColor.r = texture2D(tDiffuse, refractedUv - caOffset).r;
       refractedColor.b = texture2D(tDiffuse, refractedUv + caOffset).b;
@@ -807,6 +809,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
       tDiffuse: { value: null },
       uResolution: { value: new THREE.Vector2() },
       uAudioHigh: { value: 0 },
+      uAudioMid: { value: 0 },
     },
     vertexShader: BloomShader.vertexShader,
     fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 2 : 4}\n` + BloomShader.fragmentShader,
@@ -930,6 +933,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
     // Audio reactivity
     if (audioBands) {
       bloomPass.uniforms.uAudioHigh.value = audioBands.high;
+      bloomPass.uniforms.uAudioMid.value = audioBands.mid;
       cymaticsSimMaterial.uniforms.uAudioLow.value = audioBands.low;
       cymaticsSimMaterial.uniforms.uLowOnset.value = audioBands.lowOnset || 0;
       cymaticsSimMaterial.uniforms.uSubGain.value = subGain !== undefined ? subGain : 1.0;
