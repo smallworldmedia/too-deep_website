@@ -9,9 +9,12 @@ const REF_HEIGHT = 1080;
 const MAX_DESKTOP_SCALE = 1.0;
 const IS_MOBILE_PORTRAIT = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
 
+// Reserve space at bottom for the control panel so text never overlaps it
+const PANEL_RESERVE = IS_MOBILE_PORTRAIT ? 160 : 110;
+
 /**
  * Create a canvas texture for the "TOO DEEP" title text
- * Position is pinned to center — Y offset calculated relative to center, scaled by width
+ * Position is pinned to center of available area (viewport minus panel zone)
  */
 export function createTitleTexture(viewportWidth, viewportHeight) {
     const canvas = document.createElement('canvas');
@@ -23,15 +26,11 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, viewportWidth, viewportHeight);
 
-    // On mobile portrait, scale by width so text fills the viewport
-    // Use a minimum floor so text is never tiny on narrow screens
-    // On desktop/landscape, use min to prevent overflow
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const MIN_MOBILE_SCALE = 0.42;
+    const MIN_MOBILE_SCALE = 0.35;
     const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.05, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
 
-    // Font size scales with viewport width
     const fontSize = Math.round(600 * scale);
     const letterSpacingTOO = -50 * scale;
     const letterSpacingDEEP = -60 * scale;
@@ -41,8 +40,8 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.fillStyle = '#72ddf9';
     ctx.font = `400 ${fontSize}px Italiana`;
 
-    // Center-pinned with slight downward nudge so TOO stays in view
-    const centerY = viewportHeight / 2 + 45 * scale;
+    // Center in available area (above panel), with slight downward nudge
+    const centerY = (viewportHeight - PANEL_RESERVE) / 2 + 45 * scale;
     const tooOffsetFromCenter = -270 * scale;
     const deepOffsetFromCenter = 270 * scale;
 
@@ -75,7 +74,7 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
 
     const widthScale = viewportWidth / REF_WIDTH;
     const heightScale = viewportHeight / REF_HEIGHT;
-    const MIN_MOBILE_SCALE = 0.42;
+    const MIN_MOBILE_SCALE = 0.35;
     const scale = IS_MOBILE_PORTRAIT ? Math.max(widthScale * 1.35, MIN_MOBILE_SCALE) : Math.min(widthScale, heightScale, MAX_DESKTOP_SCALE);
     const fontSize = Math.round(100 * scale);
     const letterSpacing = 2 * scale;
@@ -85,8 +84,8 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
     ctx.fillStyle = '#79cce1';
     ctx.font = `400 ${fontSize}px Aspekta-450, sans-serif`;
 
-    // Center-pinned: artist text sits at vertical center
-    const centerY = viewportHeight / 2 + 60 * scale;
+    // Center in available area (above panel)
+    const centerY = (viewportHeight - PANEL_RESERVE) / 2 + 60 * scale;
     const artistOffsetFromCenter = -43 * scale;
 
     drawTextWithSpacing(ctx, 'JEFF SORKOWITZ', viewportWidth * 0.48, centerY + artistOffsetFromCenter, letterSpacing);
@@ -105,15 +104,12 @@ export function createArtistTexture(viewportWidth, viewportHeight) {
 function drawTextWithSpacing(ctx, text, x, y, spacing) {
     const chars = text.split('');
 
-    // Measure total width with spacing
     let totalWidth = 0;
     for (let i = 0; i < chars.length; i++) {
         totalWidth += ctx.measureText(chars[i]).width;
         if (i < chars.length - 1) totalWidth += spacing;
     }
 
-    // Use left alignment for each character — avoids sidebearing drift
-    // that accumulates with center alignment across many characters
     const savedAlign = ctx.textAlign;
     ctx.textAlign = 'left';
 
@@ -126,5 +122,3 @@ function drawTextWithSpacing(ctx, text, x, y, spacing) {
 
     ctx.textAlign = savedAlign;
 }
-
-
