@@ -812,7 +812,7 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
       uAudioMid: { value: 0 },
     },
     vertexShader: BloomShader.vertexShader,
-    fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 2 : 4}\n` + BloomShader.fragmentShader,
+    fragmentShader: `#define BLOOM_RADIUS ${isMobile ? 1 : 4}\n` + BloomShader.fragmentShader,
   });
   bloomPass.uniforms.uResolution.value.set(w, h);
   composer.addPass(bloomPass);
@@ -916,13 +916,10 @@ export function createPostProcessing(renderer, scene, camera, isMobile = false) 
   rippleCompositePass.uniforms.uResolution.value.set(w, h);
   composer.addPass(rippleCompositePass);
 
-  // 7. FXAA anti-aliasing — skip on mobile for performance
-  let fxaaPass = null;
-  if (!isMobile) {
-    fxaaPass = new ShaderPass(FXAAShader);
-    fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
-    composer.addPass(fxaaPass);
-  }
+  // 7. FXAA anti-aliasing
+  let fxaaPass = new ShaderPass(FXAAShader);
+  fxaaPass.uniforms.uResolution.value.set(1 / w, 1 / h);
+  composer.addPass(fxaaPass);
 
   function update(time, mousePos, prevMousePos, audioBands, subGain, timeSinceOnset) {
     fogPass.uniforms.uTime.value = time;
