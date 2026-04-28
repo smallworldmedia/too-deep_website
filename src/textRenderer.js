@@ -56,9 +56,9 @@ function computeFittedScale(viewportWidth, viewportHeight) {
     //   Bottom: control panel + SWM footer + safe area ≈ 28% of viewport height
     //   Top: status bar + breathing room ≈ 7% of viewport height
     //   Sides: breathing room ≈ 4% of viewport width per side
-    const PANEL_RESERVE = viewportHeight * 0.28;
+    const PANEL_RESERVE = viewportHeight * 0.12;
     const TOP_PADDING = viewportHeight * 0.07;
-    const SIDE_PADDING = viewportWidth * 0.04;
+    const SIDE_PADDING = viewportWidth * 0.02;
 
     // Available drawing area
     const availableWidth = viewportWidth - 2 * SIDE_PADDING;
@@ -99,8 +99,8 @@ export function createTitleTexture(viewportWidth, viewportHeight) {
     ctx.fillStyle = '#72ddf9';
     ctx.font = `400 ${fontSize}px Italiana`;
 
-    const tooOffsetFromCenter = -270 * scale;
-    const deepOffsetFromCenter = 270 * scale;
+    const tooOffsetFromCenter = -280 * scale;
+    const deepOffsetFromCenter = 280 * scale;
 
     const tooY = centerY + tooOffsetFromCenter;
     const deepY = centerY + deepOffsetFromCenter;
