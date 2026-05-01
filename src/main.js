@@ -199,8 +199,6 @@ function initPanel() {
     const backdrop = document.getElementById('panel-backdrop');
     const presaveBtn = document.getElementById('tape-presave');
     const shareBtn = document.getElementById('share-btn');
-    const releaseLabel = document.getElementById('release-label');
-    const panelDivider = document.querySelector('.panel-divider-horizontal');
     if (!overlay || !backdrop || !presaveBtn) return;
 
     function setPanel(open) {
@@ -215,9 +213,7 @@ function initPanel() {
             shareBtn.classList.toggle('close-mode', open);
             shareBtn.setAttribute('aria-label', open ? 'Close overlay' : 'Share this page');
         }
-        // Hide release label + divider when overlay is open to reduce panel height
-        if (releaseLabel) releaseLabel.classList.toggle('panel-label-hidden', open);
-        if (panelDivider) panelDivider.classList.toggle('panel-label-hidden', open);
+
     }
 
     presaveBtn.addEventListener('click', () => setPanel(!isPanelOpen));
