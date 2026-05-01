@@ -11,6 +11,7 @@ import { AudioEngine } from './audioEngine.js';
 // ================================================================
 const PLATFORM_LINKS = [
     { slug: 'spotify', label: 'Spotify', href: 'https://broke.ffm.to/jeff_sorkowitz-too_deep/spotify', logo: '/logos/Spotify_Full_Logo_RGB_White.png' },
+    { slug: 'beatport', label: 'Beatport', href: 'https://www.beatport.com/release/too-deep/6845247', logo: '/logos/beatport.svg' },
     { slug: 'applemusic', label: 'Apple Music', href: 'https://broke.ffm.to/jeff_sorkowitz-too_deep/applemusic', logo: '/logos/apple-music.svg' },
     { slug: 'deezer', label: 'Deezer', href: 'https://broke.ffm.to/jeff_sorkowitz-too_deep/deezer', logo: '/logos/deezer-logo.png' },
     { slug: 'amazonmusic', label: 'Amazon Music', href: 'https://broke.ffm.to/jeff_sorkowitz-too_deep/amazonmusic', logo: '/logos/Amazon_Music_Logo_Stacked_RGB_White_MASTER.svg' },
