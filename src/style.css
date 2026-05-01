@@ -888,7 +888,7 @@ body.presave-active #broke-logo .broke-logo-label-wrap {
 /* Pre-save prompt text — above platform buttons */
 .presave-prompt {
   font-family: 'Aspekta-450', sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
@@ -996,6 +996,10 @@ body.presave-active #broke-logo .broke-logo-label-wrap {
 
 /* Per-logo optical sizing — balance visual weight */
 .platform-pill[data-slug="spotify"] .platform-logo {
+  height: 26px;
+}
+
+.platform-pill[data-slug="beatport"] .platform-logo {
   height: 26px;
 }
 
